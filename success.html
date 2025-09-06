@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merci! - Leeket Survey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #2ECC71;
+            --primary-green-dark: #27AE60;
+            --primary-green-light: #A9DFBF;
+            --gray-100: #F5F5F5;
+            --gray-700: #616161;
+            --gray-900: #212121;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-green-light) !important;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(46, 204, 113, 0.15);
+            padding: 48px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            color: var(--gray-700);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .promo-box {
+            background: var(--primary-green) !important;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .promo-code {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .next-steps {
+            background: var(--gray-100);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .next-steps h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray-700);
+        }
+
+        .next-steps .icon {
+            color: var(--primary-green);
+            font-size: 20px;
+        }
+
+        .social-links {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .social-links p {
+            color: var(--gray-700);
+            margin-bottom: 16px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .social-button {
+            padding: 12px 24px;
+            background: var(--primary-green) !important;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .social-button:hover {
+            transform: translateY(-2px);
+            background: var(--primary-green-dark) !important;
+        }
+
+        .home-button {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 12px 32px;
+            background: white;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: var(--primary-green) !important;
+            color: white;
+        }
+
+        @media (max-width: 640px) {
+            .success-container {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .promo-code {
+                font-size: 28px;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1>Jërëjëf! Merci beaucoup!</h1>
+        <p class="subtitle">
+            Vos réponses nous sont extrêmement précieuses pour créer le meilleur service de courses en ligne à Dakar.
+        </p>
+
+        <div class="promo-box">
+            <p style="font-size: 16px; margin-bottom: 8px;">Votre code promo exclusif</p>
+            <div class="promo-code" id="promoCode">LEEKET2000</div>
+            <p style="font-size: 14px; opacity: 0.9;">
+                Valable pour 2000 FCFA de réduction sur votre première commande
+            </p>
+        </div>
+
+        <div class="next-steps">
+            <h2>🚀 Prochaines étapes</h2>
+            <ul>
+                <li>
+                    <span class="icon">📱</span>
+                    <span>Vous recevrez un SMS de confirmation dans les 24h</span>
+                </li>
+                <li>
+                    <span class="icon">📧</span>
+                    <span>Si vous avez laissé votre email, vous recevrez nos actualités</span>
+                </li>
+                <li>
+                    <span class="icon">🎯</span>
+                    <span>Lancement prévu : Premier trimestre 2025</span>
+                </li>
+                <li>
+                    <span class="icon">💚</span>
+                    <span>Les beta testeurs bénéficieront de -50% au lancement!</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="social-links">
+            <p>Suivez notre aventure et restez informé(e) :</p>
+            <div class="social-buttons">
+                <a href="#" class="social-button">Instagram @leeket_sn</a>
+                <a href="#" class="social-button">WhatsApp</a>
+            </div>
+        </div>
+
+        <a href="/" class="home-button">Retour à l'accueil</a>
+    </div>
+
+    <script>
+        // Get promo code from localStorage if available
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedPromo = localStorage.getItem('leeket_promo');
+            if (savedPromo) {
+                document.getElementById('promoCode').textContent = savedPromo;
+            }
+            
+            // Check if coming from form submission
+            const urlParams = new URLSearchParams(window.location.search);
+            const promo = urlParams.get('promo');
+            if (promo) {
+                document.getElementById('promoCode').textContent = promo;
+            }
+        });
+    </script>
+</body>
+</html>

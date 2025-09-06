@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leeket - Sama marché, sama telefon | Sondage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Couleur principale - MONOCHROME VERT UNIQUEMENT */
+            --primary-green: #2ECC71;
+            --primary-green-dark: #27AE60;
+            --primary-green-light: #A9DFBF;
+            --gray-100: #F5F5F5;
+            --gray-300: #E0E0E0;
+            --gray-500: #9E9E9E;
+            --gray-700: #616161;
+            --gray-900: #212121;
+            
+            /* Espacements */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-green-light) !important;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--gray-900);
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(46, 204, 113, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--primary-green) !important;
+            color: white;
+            padding: var(--spacing-xxl) var(--spacing-xl);
+            text-align: center;
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-bottom: var(--spacing-md);
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .subtitle {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .incentive {
+            background: rgba(255,255,255,0.25);
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-top: var(--spacing-lg);
+            display: inline-block;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .form-content {
+            padding: var(--spacing-xxl) var(--spacing-xl);
+        }
+
+        .progress-container {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--gray-300);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-green) !important;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .section {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .section-number {
+            background: var(--primary-green) !important;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            color: var(--gray-700);
+            font-weight: 500;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .label-helper {
+            font-size: 13px;
+            color: var(--gray-500);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .required {
+            color: var(--primary-green);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .radio-item:hover,
+        .checkbox-item:hover {
+            border-color: var(--primary-green);
+            background: rgba(46, 204, 113, 0.05);
+        }
+
+        .radio-item input,
+        .checkbox-item input {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-green);
+        }
+
+        .radio-item.selected,
+        .checkbox-item.selected {
+            border-color: var(--primary-green);
+            background: rgba(46, 204, 113, 0.08);
+        }
+
+        .price-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .dish-item {
+            padding: 12px;
+            border: 2px solid var(--gray-300);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            background: white;
+        }
+
+        .dish-item:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .dish-item input {
+            display: none;
+        }
+
+        .dish-item.selected {
+            border-color: var(--primary-green);
+            background: rgba(46, 204, 113, 0.08);
+            font-weight: 600;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg) 0;
+        }
+
+        .likert-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .likert-option input {
+            margin-bottom: var(--spacing-sm);
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--primary-green);
+        }
+
+        .likert-option label {
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--gray-700);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xxl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--gray-300);
+        }
+
+        button {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            min-height: 56px;
+        }
+
+        .btn-previous {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+        .btn-previous:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-500);
+        }
+
+        .btn-next,
+        .btn-submit {
+            background: var(--primary-green) !important;
+            color: white;
+            box-shadow: 0 4px 14px rgba(46, 204, 113, 0.25);
+        }
+
+        .btn-next:hover,
+        .btn-submit:hover {
+            background: var(--primary-green-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.35);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-xxl);
+        }
+
+        .success-icon {
+            font-size: 72px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .success-message h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .success-message p {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .error {
+            color: var(--primary-green-dark);
+            font-size: 13px;
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #C0392B;
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+
+        .info-box {
+            background: rgba(46, 204, 113, 0.08) !important;
+            padding: var(--spacing-lg);
+            border-radius: 12px;
+            margin-bottom: var(--spacing-lg);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .info-box strong {
+            color: var(--gray-900);
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: var(--gray-700);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: var(--spacing-sm) 0;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .feature-list .icon {
+            color: var(--primary-green);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+
+        .spinner {
+            border: 3px solid var(--gray-300);
+            border-top: 3px solid var(--primary-green);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 640px) {
+            .form-content {
+                padding: var(--spacing-xl) var(--spacing-lg);
+            }
+            
+            .price-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .dishes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .likert-scale {
+                flex-wrap: wrap;
+                gap: var(--spacing-md);
+            }
+            
+            button {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-text">Leeket</div>
+            <p class="tagline">Sama marché, sama telefon</p>
+            <h1>Aidez-nous à créer VOTRE marché digital!</h1>
+            <p class="subtitle">Participez à la révolution des courses alimentaires à Dakar.<br>
+            Vos réponses nous aideront à construire le service parfait pour vous.</p>
+            <div class="incentive">🎁 5 min = 2000 FCFA de réduction au lancement!</div>
+        </div>
+
+        <div class="form-content">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span>Question <span id="currentQ">1</span> sur <span id="totalQ">7</span></span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Envoi en cours...</p>
+            </div>
+
+            <form id="surveyForm">
+                <!-- Section 1: Profil -->
+                <div class="section active" data-section="1">
+                    <h2 class="section-title">
+                        <span class="section-number">1</span>
+                        Faisons connaissance
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Dans quel quartier habitez-vous? <span class="required">*</span></label>
+                        <select name="quartier" required>
+                            <option value="">Sélectionnez votre quartier</option>
+                            <option value="plateau">Plateau</option>
+                            <option value="almadies">Almadies</option>
+                            <option value="mermoz">Mermoz</option>
+                            <option value="sacre-coeur">Sacré-Cœur</option>
+                            <option value="point-e">Point E</option>
+                            <option value="fann">Fann</option>
+                            <option value="parcelles">Parcelles Assainies</option>
+                            <option value="grand-dakar">Grand Dakar</option>
+                            <option value="liberte">Liberté</option>
+                            <option value="hlm">HLM</option>
+                            <option value="medina">Médina</option>
+                            <option value="ouakam">Ouakam</option>
+                            <option value="yoff">Yoff</option>
+                            <option value="ngor">Ngor</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <span class="error">Ce champ est requis</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quelle est votre tranche d'âge? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="age" value="18-25" required>
+                                <span>18-25 ans</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="age" value="26-35">
+                                <span>26-35 ans</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="age" value="36-45">
+                                <span>36-45 ans</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="age" value="46-55">
+                                <span>46-55 ans</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="age" value="56+">
+                                <span>Plus de 55 ans</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Combien de personnes vivent dans votre foyer? <span class="required">*</span></label>
+                        <select name="foyer_size" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="1">Je vis seul(e)</option>
+                            <option value="2">2 personnes</option>
+                            <option value="3-4">3-4 personnes</option>
+                            <option value="5-6">5-6 personnes</option>
+                            <option value="7+">Plus de 6 personnes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Votre situation professionnelle? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="profession" value="salarie" required>
+                                <span>Salarié(e)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="profession" value="entrepreneur">
+                                <span>Entrepreneur/Indépendant</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="profession" value="etudiant">
+                                <span>Étudiant(e)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="profession" value="menagere">
+                                <span>Au foyer</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="profession" value="retraite">
+                                <span>Retraité(e)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Habitudes actuelles -->
+                <div class="section" data-section="2">
+                    <h2 class="section-title">
+                        <span class="section-number">2</span>
+                        Vos habitudes de courses
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Où faites-vous principalement vos courses alimentaires? <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="lieu_courses" value="marche_traditionnel">
+                                <span>Marché traditionnel (HLM, Sandaga, Tilène...)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="lieu_courses" value="supermarche">
+                                <span>Supermarché (Auchan, Casino, Exclusive...)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="lieu_courses" value="boutique_quartier">
+                                <span>Boutique de quartier</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="lieu_courses" value="vendeur_ambulant">
+                                <span>Vendeurs ambulants</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="lieu_courses" value="online">
+                                <span>En ligne (Jumia, autres...)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>À quelle fréquence faites-vous vos courses alimentaires? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="frequence" value="quotidien" required>
+                                <span>Tous les jours</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence" value="2-3fois">
+                                <span>2-3 fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence" value="hebdo">
+                                <span>Une fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence" value="bimensuel">
+                                <span>Toutes les 2 semaines</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence" value="mensuel">
+                                <span>Une fois par mois</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quel est votre budget HEBDOMADAIRE moyen pour les courses alimentaires? <span class="required">*</span></label>
+                        <select name="budget_hebdo" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="<10000">Moins de 10,000 FCFA</option>
+                            <option value="10000-20000">10,000 - 20,000 FCFA</option>
+                            <option value="20000-35000">20,000 - 35,000 FCFA</option>
+                            <option value="35000-50000">35,000 - 50,000 FCFA</option>
+                            <option value="50000-75000">50,000 - 75,000 FCFA</option>
+                            <option value="75000+">Plus de 75,000 FCFA</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quels sont vos principaux défis lors des courses? (Plusieurs choix possibles)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="temps">
+                                <span>Manque de temps</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="transport">
+                                <span>Transport des achats difficile</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="qualite">
+                                <span>Qualité variable des produits</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="prix">
+                                <span>Prix élevés ou variables</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="disponibilite">
+                                <span>Produits non disponibles</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="defis" value="foule">
+                                <span>Marchés bondés/stressants</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Préférences culinaires -->
+                <div class="section" data-section="3">
+                    <h2 class="section-title">
+                        <span class="section-number">3</span>
+                        Vos plats préférés
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Quels plats sénégalais cuisinez-vous régulièrement? (Choisissez jusqu'à 7)</label>
+                        <div class="dishes-grid">
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="thieboudienne">
+                                <span>Thiéboudienne 🍚</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="yassa">
+                                <span>Yassa 🍗</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="mafe">
+                                <span>Mafé 🥜</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="thiou">
+                                <span>Thiou 🍖</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="domoda">
+                                <span>Domoda 🍅</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="supkanja">
+                                <span>Soup Kandja 🌿</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="caldou">
+                                <span>Caldou 🐟</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="bassi">
+                                <span>Bassi Salté 🍝</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="ceebujenblanc">
+                                <span>Ceebu Jën Blanc 🌾</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="firire">
+                                <span>Firire 🐟</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="pastels">
+                                <span>Pastels 🥟</span>
+                            </label>
+                            <label class="dish-item">
+                                <input type="checkbox" name="plats" value="fataya">
+                                <span>Fataya 🥧</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>À quelle fréquence cuisinez-vous des plats traditionnels sénégalais? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="freq_cuisine" value="quotidien" required>
+                                <span>Tous les jours</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_cuisine" value="4-5fois">
+                                <span>4-5 fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_cuisine" value="2-3fois">
+                                <span>2-3 fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_cuisine" value="weekend">
+                                <span>Weekends uniquement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_cuisine" value="occasionnel">
+                                <span>Occasionnellement</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Qui cuisine principalement dans votre foyer? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="qui_cuisine" value="moi" required>
+                                <span>Moi-même</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="qui_cuisine" value="conjoint">
+                                <span>Mon/ma conjoint(e)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="qui_cuisine" value="aide">
+                                <span>Aide ménagère</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="qui_cuisine" value="partage">
+                                <span>Partagé entre plusieurs</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="qui_cuisine" value="restaurant">
+                                <span>Je mange souvent dehors</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Système de commande anticipée -->
+                <div class="section" data-section="4">
+                    <h2 class="section-title">
+                        <span class="section-number">4</span>
+                        Votre préférence de commande
+                    </h2>
+
+                    <div class="info-box">
+                        <strong>💡 Comment fonctionne Leeket?</strong>
+                        <p>Pour garantir la fraîcheur et la disponibilité de vos produits, Leeket fonctionne avec un système de commande anticipée. Vous commandez à l'avance et nous préparons votre marché avec soin!</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quel délai de commande vous convient le mieux? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="delai_commande" value="24h" required>
+                                <span><strong>24 heures à l'avance</strong> - Je commande aujourd'hui pour demain</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_commande" value="48h">
+                                <span><strong>48 heures à l'avance</strong> - Plus de temps pour planifier</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_commande" value="72h">
+                                <span><strong>72 heures à l'avance</strong> - Je planifie ma semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_commande" value="flexible">
+                                <span><strong>Flexible</strong> - Selon mes besoins (24h à 1 semaine)</span>
+                            </label>
+                        </div>
+                        <p class="label-helper">Ce système nous permet de vous garantir les meilleurs produits au meilleur prix!</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Seriez-vous intéressé(e) par des commandes programmées automatiques? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="commande_auto" value="oui_hebdo" required>
+                                <span><strong>Oui, hebdomadaire</strong> - Même commande chaque semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="commande_auto" value="oui_bi_hebdo">
+                                <span><strong>Oui, bi-hebdomadaire</strong> - Tous les 15 jours</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="commande_auto" value="oui_mensuel">
+                                <span><strong>Oui, mensuelle</strong> - Une fois par mois</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="commande_auto" value="oui_personnalise">
+                                <span><strong>Oui, personnalisé</strong> - Je définis ma fréquence</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="commande_auto" value="non">
+                                <span><strong>Non merci</strong> - Je préfère commander manuellement</span>
+                            </label>
+                        </div>
+                        <p class="label-helper">Exemple : Recevez automatiquement votre pack Thiéboudienne tous les mardis!</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quels avantages vous motiveraient à commander à l'avance? (Max 3 choix)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="reduction">
+                                <span>Réduction de prix (-10% par exemple)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="livraison_gratuite">
+                                <span>Livraison gratuite</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="priorite">
+                                <span>Choix prioritaire sur les meilleurs produits</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="creneau">
+                                <span>Créneaux de livraison garantis</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="personnalisation">
+                                <span>Packs personnalisés selon mes goûts</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="avantages_anticipe" value="points">
+                                <span>Points fidélité doublés</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quel serait votre délai idéal si vous aviez le choix? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="delai_ideal" value="2h" required>
+                                <span>2 heures (service express premium)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_ideal" value="meme_jour">
+                                <span>Le jour même</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_ideal" value="24h">
+                                <span>24 heures (le lendemain)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_ideal" value="48h">
+                                <span>48 heures (surlendemain)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="delai_ideal" value="peu_importe">
+                                <span>Peu importe si le prix est bon</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Notre concept Leeket -->
+                <div class="section" data-section="5">
+                    <h2 class="section-title">
+                        <span class="section-number">5</span>
+                        Notre concept Leeket
+                    </h2>
+
+                    <div class="info-box">
+                        <strong>🛒 Leeket, votre marché réinventé</strong>
+                        <ul class="feature-list">
+                            <li>
+                                <span class="icon">📦</span>
+                                <span><strong>Packs recettes</strong> : Tous les ingrédients dosés pour vos plats préférés</span>
+                            </li>
+                            <li>
+                                <span class="icon">🏪</span>
+                                <span><strong>Hub de quartier</strong> : Un point de retrait moderne près de chez vous</span>
+                            </li>
+                            <li>
+                                <span class="icon">📱</span>
+                                <span><strong>Commande anticipée</strong> : Commandez 24-48h à l'avance pour garantir fraîcheur et disponibilité</span>
+                            </li>
+                            <li>
+                                <span class="icon">🚗</span>
+                                <span><strong>Click & Collect</strong> : Récupérez votre commande en 5 minutes</span>
+                            </li>
+                            <li>
+                                <span class="icon">🚴</span>
+                                <span><strong>Livraison</strong> : Ou faites-vous livrer à domicile</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ce concept vous intéresse-t-il? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" name="interet" value="1" required>
+                                <label>Pas du tout</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet" value="2">
+                                <label>Peu</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet" value="3">
+                                <label>Moyennement</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet" value="4">
+                                <label>Beaucoup</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet" value="5">
+                                <label>Énormément</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Qu'est-ce qui vous attire le plus dans Leeket? (Max 3 choix)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="gain_temps">
+                                <span>Gain de temps considérable</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="packs_recettes">
+                                <span>Packs recettes tout prêts</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="qualite">
+                                <span>Qualité garantie des produits</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="prix_transparents">
+                                <span>Prix fixes et transparents</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="hub_proximite">
+                                <span>Hub de quartier proche</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="attrait" value="commande_avance">
+                                <span>Commande à l'avance = tranquillité</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quel service préféreriez-vous utiliser? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="service_prefere" value="livraison" required>
+                                <span>Livraison à domicile uniquement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="service_prefere" value="click_collect">
+                                <span>Click & Collect au hub uniquement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="service_prefere" value="mixte">
+                                <span>Les deux selon mes besoins</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="service_prefere" value="hub_direct">
+                                <span>Achats directs au hub + commandes</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Prix et utilisation -->
+                <div class="section" data-section="6">
+                    <h2 class="section-title">
+                        <span class="section-number">6</span>
+                        Tarifs et utilisation
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Pour un pack Thiéboudienne 4 personnes (avec tous les ingrédients frais), quel prix vous semble juste?</label>
+                        <div class="price-inputs">
+                            <div>
+                                <label style="font-size: 13px; margin-bottom: 5px;">Prix minimum <span class="required">*</span></label>
+                                <input type="number" name="prix_min_pack" placeholder="Ex: 5000" required>
+                            </div>
+                            <div>
+                                <label style="font-size: 13px; margin-bottom: 5px;">Prix maximum <span class="required">*</span></label>
+                                <input type="number" name="prix_max_pack" placeholder="Ex: 7000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Combien seriez-vous prêt à payer pour la livraison? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="prix_livraison" value="0" required>
+                                <span>Gratuite (incluse dans le prix)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="prix_livraison" value="500">
+                                <span>500 FCFA maximum</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="prix_livraison" value="1000">
+                                <span>1000 FCFA maximum</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="prix_livraison" value="1500">
+                                <span>1500 FCFA si c'est rapide</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="prix_livraison" value="variable">
+                                <span>Selon la distance (500-2000 FCFA)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>À quelle fréquence utiliseriez-vous Leeket? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="frequence_usage" value="quotidien" required>
+                                <span>Tous les jours</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence_usage" value="3-4fois">
+                                <span>3-4 fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence_usage" value="1-2fois">
+                                <span>1-2 fois par semaine</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence_usage" value="bimensuel">
+                                <span>2 fois par mois</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frequence_usage" value="occasionnel">
+                                <span>Occasionnellement</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quel serait votre panier moyen par commande? <span class="required">*</span></label>
+                        <select name="panier_moyen" required>
+                            <option value="">Sélectionnez</option>
+                            <option value="<3000">Moins de 3,000 FCFA</option>
+                            <option value="3000-5000">3,000 - 5,000 FCFA</option>
+                            <option value="5000-7500">5,000 - 7,500 FCFA</option>
+                            <option value="7500-10000">7,500 - 10,000 FCFA</option>
+                            <option value="10000-15000">10,000 - 15,000 FCFA</option>
+                            <option value="15000+">Plus de 15,000 FCFA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section 7: Contact et suggestions -->
+                <div class="section" data-section="7">
+                    <h2 class="section-title">
+                        <span class="section-number">7</span>
+                        Restons en contact!
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Vos suggestions pour améliorer notre concept?</label>
+                        <textarea name="suggestions" placeholder="Dites-nous tout! Quels services additionnels aimeriez-vous? Quels produits spéciaux? Quelles fonctionnalités?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quelles sont vos principales inquiétudes concernant ce service?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="fraicheur">
+                                <span>Fraîcheur des produits</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="delai_24h">
+                                <span>Devoir commander 24h à l'avance</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="prix">
+                                <span>Prix plus élevés qu'au marché</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="choix">
+                                <span>Manque de choix/variété</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="livraison">
+                                <span>Fiabilité de la livraison</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="paiement">
+                                <span>Sécurité du paiement en ligne</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="inquietudes" value="aucune">
+                                <span>Aucune inquiétude</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pour recevoir votre code promo de 2000 FCFA: <span class="required">*</span></label>
+                        <input type="tel" name="telephone" placeholder="77 123 45 67" required pattern="[0-9]{2}[\s]?[0-9]{3}[\s]?[0-9]{2}[\s]?[0-9]{2}">
+                        <span class="error">Numéro de téléphone requis</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email (optionnel - pour les actualités Leeket)</label>
+                        <input type="email" name="email" placeholder="exemple@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prénom (optionnel)</label>
+                        <input type="text" name="prenom" placeholder="Votre prénom">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <label class="checkbox-item" style="background: rgba(46, 204, 113, 0.05); border-color: var(--primary-green);">
+                                <input type="checkbox" name="beta_tester" value="oui">
+                                <span style="font-weight: 600;">🚀 Je veux être beta testeur et bénéficier de -50% au lancement!</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 8: Diaspora - Identification -->
+                <div class="section" data-section="8">
+                    <h2 class="section-title">
+                        <span class="section-number">8</span>
+                        Pour nos compatriotes de la diaspora
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Êtes-vous membre de la diaspora sénégalaise? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="est_diaspora" value="oui" required>
+                                <span>Oui, je vis à l'étranger</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="est_diaspora" value="non">
+                                <span>Non, je vis au Sénégal</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Dans quel pays résidez-vous actuellement? <span class="required">*</span></label>
+                        <select name="pays_residence">
+                            <option value="">Sélectionnez votre pays</option>
+                            <option value="france">France</option>
+                            <option value="usa">États-Unis</option>
+                            <option value="canada">Canada</option>
+                            <option value="italie">Italie</option>
+                            <option value="espagne">Espagne</option>
+                            <option value="belgique">Belgique</option>
+                            <option value="allemagne">Allemagne</option>
+                            <option value="uk">Royaume-Uni</option>
+                            <option value="suisse">Suisse</option>
+                            <option value="pays-bas">Pays-Bas</option>
+                            <option value="maroc">Maroc</option>
+                            <option value="cote-ivoire">Côte d'Ivoire</option>
+                            <option value="gabon">Gabon</option>
+                            <option value="mauritanie">Mauritanie</option>
+                            <option value="dubai">Émirats Arabes Unis</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>À quelle fréquence envoyez-vous de l'aide alimentaire à votre famille au Sénégal? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="freq_aide_alimentaire" value="mensuel">
+                                <span>Tous les mois</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_aide_alimentaire" value="trimestriel">
+                                <span>Tous les 3 mois</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_aide_alimentaire" value="occasionnel">
+                                <span>Occasionnellement (fêtes, événements)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_aide_alimentaire" value="jamais">
+                                <span>Je n'envoie pas d'aide alimentaire</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Comment aidez-vous actuellement votre famille pour les courses? (Plusieurs choix possibles)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="methode_aide_actuelle" value="argent">
+                                <span>J'envoie de l'argent (transfert)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="methode_aide_actuelle" value="visite">
+                                <span>J'apporte des produits lors de mes visites</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="methode_aide_actuelle" value="quelqu'un">
+                                <span>Je demande à quelqu'un sur place d'acheter</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="methode_aide_actuelle" value="colis">
+                                <span>J'envoie des colis</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="methode_aide_actuelle" value="aucune">
+                                <span>Je n'aide pas pour les courses</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quel est votre budget mensuel moyen pour aider votre famille au Sénégal (toutes aides confondues)?</label>
+                        <select name="budget_aide_mensuel">
+                            <option value="">Sélectionnez</option>
+                            <option value="<50">Moins de 50€/mois</option>
+                            <option value="50-100">50€ - 100€/mois</option>
+                            <option value="100-200">100€ - 200€/mois</option>
+                            <option value="200-300">200€ - 300€/mois</option>
+                            <option value="300-500">300€ - 500€/mois</option>
+                            <option value="500+">Plus de 500€/mois</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section 9: Diaspora - Service Leeket -->
+                <div class="section" data-section="9">
+                    <h2 class="section-title">
+                        <span class="section-number">9</span>
+                        Leeket pour la diaspora
+                    </h2>
+
+                    <div class="info-box">
+                        <strong>🌍 Service spécial diaspora</strong>
+                        <p>Commandez et payez depuis l'étranger, nous livrons à votre famille au Sénégal!</p>
+                        <ul class="feature-list">
+                            <li>
+                                <span class="icon">💳</span>
+                                <span>Paiement sécurisé en ligne (CB, PayPal)</span>
+                            </li>
+                            <li>
+                                <span class="icon">📱</span>
+                                <span>Suivi en temps réel de la commande</span>
+                            </li>
+                            <li>
+                                <span class="icon">📸</span>
+                                <span>Photo de confirmation de livraison</span>
+                            </li>
+                            <li>
+                                <span class="icon">🎁</span>
+                                <span>Packs spéciaux fêtes (Korité, Tabaski, etc.)</span>
+                            </li>
+                            <li>
+                                <span class="icon">🔄</span>
+                                <span>Abonnements mensuels automatiques</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Ce service vous intéresse-t-il pour aider votre famille? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" name="interet_diaspora" value="1">
+                                <label>Pas du tout</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet_diaspora" value="2">
+                                <label>Peu</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet_diaspora" value="3">
+                                <label>Moyennement</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet_diaspora" value="4">
+                                <label>Beaucoup</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" name="interet_diaspora" value="5">
+                                <label>Énormément</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quelles fonctionnalités sont les plus importantes pour vous? (Max 3)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="paiement_securise">
+                                <span>Paiement 100% sécurisé depuis l'étranger</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="suivi_temps_reel">
+                                <span>Suivi en temps réel de la livraison</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="photo_confirmation">
+                                <span>Photo/vidéo de confirmation de réception</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="abonnement">
+                                <span>Abonnement mensuel automatique</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="packs_fetes">
+                                <span>Packs spéciaux pour les fêtes</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="choix_beneficiaire">
+                                <span>Le bénéficiaire peut choisir ses produits</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="multi_beneficiaires">
+                                <span>Livraison à plusieurs bénéficiaires</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="fonctionnalites_diaspora" value="historique">
+                                <span>Historique détaillé des commandes</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Combien seriez-vous prêt à payer en frais de service (en plus du prix des courses)?</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="frais_service_diaspora" value="0">
+                                <span>0% - Aucun frais supplémentaire</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frais_service_diaspora" value="5">
+                                <span>5% du montant total</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frais_service_diaspora" value="10">
+                                <span>10% du montant total</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frais_service_diaspora" value="15">
+                                <span>15% si le service est excellent</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="frais_service_diaspora" value="fixe">
+                                <span>Montant fixe (5€/commande)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>À quelle fréquence utiliseriez-vous ce service?</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="freq_utilisation_diaspora" value="hebdo">
+                                <span>Toutes les semaines</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_utilisation_diaspora" value="bimensuel">
+                                <span>Toutes les 2 semaines</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_utilisation_diaspora" value="mensuel">
+                                <span>Une fois par mois</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_utilisation_diaspora" value="fetes">
+                                <span>Pour les fêtes uniquement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="freq_utilisation_diaspora" value="occasionnel">
+                                <span>Occasionnellement</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Informations sur votre/vos bénéficiaire(s) au Sénégal</label>
+                        <input type="text" name="beneficiaire_quartier" placeholder="Quartier du bénéficiaire principal">
+                        <div style="margin-top: 10px;">
+                            <input type="number" name="nombre_beneficiaires" placeholder="Nombre de bénéficiaires" min="1" max="10">
+                        </div>
+                    </div>
+
+                    <div class="form-group non-diaspora-only" style="display: none;">
+                        <div class="info-box">
+                            <strong>💚 Merci pour votre intérêt!</strong>
+                            <p>Les questions suivantes concernent spécifiquement notre service pour la diaspora. Vous pouvez passer directement à la soumission du formulaire.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button type="button" class="btn-previous" id="btnPrevious" style="display: none;">
+                        ← Précédent
+                    </button>
+                    <button type="button" class="btn-next" id="btnNext">
+                        Suivant →
+                    </button>
+                    <button type="submit" class="btn-submit" id="btnSubmit" style="display: none;">
+                        Envoyer mes réponses 🎉
+                    </button>
+                </div>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">🎉</div>
+                <h2>Jërëjëf! Merci beaucoup!</h2>
+                <p>Vos réponses nous sont précieuses pour créer le meilleur service de courses en ligne à Dakar.</p>
+                <p style="margin-top: 20px;"><strong>Votre code promo de 2000 FCFA vous sera envoyé par SMS d'ici 24h.</strong></p>
+                <p style="margin-top: 30px; font-size: 14px; color: #999;">
+                    Suivez-nous : Instagram @leeket_sn | WhatsApp: 77 XXX XX XX
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="survey.js"></script>
+</body>
+</html>

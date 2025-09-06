@@ -1,0 +1,21 @@
+{
+  "name": "leeket-survey",
+  "version": "1.0.0",
+  "description": "Formulaire de sondage pour Leeket - Service de livraison de courses à Dakar",
+  "scripts": {
+    "dev": "netlify dev",
+    "deploy": "netlify deploy",
+    "deploy:prod": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.10.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Leeket",
+  "license": "MIT"
+}
