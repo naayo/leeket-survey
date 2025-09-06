@@ -77,6 +77,9 @@ localisationRadios.forEach(radio => {
 			// Show engagement message
 			if (diasporaEngagement) diasporaEngagement.style.display = 'block';
 		}
+		
+		// Update progress display when location changes
+		updateProgress();
 	});
 });
 
@@ -123,10 +126,29 @@ if (totalQSpan) totalQSpan.textContent = '10';
 
 // Progress bar update
 function updateProgress() {
-	const progress = (currentSection / totalSections) * 100;
+	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+	const isDiaspora = locationAnswer && locationAnswer.value === 'etranger';
+	
+	let adjustedSection = currentSection;
+	let adjustedTotal = totalSections;
+	
+	if (isDiaspora) {
+		// For diaspora: Section 1, then 8, 9, 10 (show as 1, 2, 3, 4)
+		if (currentSection === 1) adjustedSection = 1;
+		else if (currentSection === 8) adjustedSection = 2;
+		else if (currentSection === 9) adjustedSection = 3;
+		else if (currentSection === 10) adjustedSection = 4;
+		adjustedTotal = 4;
+	}
+	
+	const progress = (adjustedSection / adjustedTotal) * 100;
 	progressBar.style.width = progress + '%';
 	progressPercent.textContent = Math.round(progress) + '%';
-	currentQSpan.textContent = currentSection;
+	currentQSpan.textContent = adjustedSection;
+	
+	// Update total display
+	const totalQSpan = document.getElementById('totalQ');
+	if (totalQSpan) totalQSpan.textContent = adjustedTotal;
 }
 
 // Show specific section
@@ -217,7 +239,14 @@ function validateSection(sectionNumber) {
 // Next button handler
 btnNext.addEventListener('click', function () {
 	if (validateSection(currentSection)) {
-		currentSection++;
+		// Check if diaspora user should skip sections 2-7
+		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+		if (locationAnswer && locationAnswer.value === 'etranger' && currentSection === 1) {
+			// Skip directly to Section 8 for diaspora users
+			currentSection = 8;
+		} else {
+			currentSection++;
+		}
 		showSection(currentSection);
 	} else {
 		alert('Veuillez remplir tous les champs requis');
@@ -226,7 +255,14 @@ btnNext.addEventListener('click', function () {
 
 // Previous button handler
 btnPrevious.addEventListener('click', function () {
-	currentSection--;
+	// Check if diaspora user should skip sections 2-7
+	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+	if (locationAnswer && locationAnswer.value === 'etranger' && currentSection === 8) {
+		// Skip back to Section 1 for diaspora users
+		currentSection = 1;
+	} else {
+		currentSection--;
+	}
 	showSection(currentSection);
 });
 
