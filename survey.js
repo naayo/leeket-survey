@@ -172,11 +172,40 @@ function showSection(sectionNumber) {
 	const targetSection = document.querySelector(`[data-section="${sectionNumber}"]`);
 	if (targetSection) {
 		targetSection.classList.add('active');
+		
+		// Make sure diaspora/local fields are properly shown based on location
+		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+		if (locationAnswer) {
+			const isDiaspora = locationAnswer.value === 'etranger';
+			const isLocal = locationAnswer.value === 'senegal';
+			
+			// Update fields visibility in the current section
+			targetSection.querySelectorAll('.local-only').forEach(field => {
+				if (field.tagName === 'SPAN') {
+					field.style.display = isLocal ? 'inline' : 'none';
+				} else {
+					field.style.display = isLocal ? 'block' : 'none';
+				}
+			});
+			
+			targetSection.querySelectorAll('.diaspora-only').forEach(field => {
+				if (field.tagName === 'SPAN') {
+					field.style.display = isDiaspora ? 'inline' : 'none';
+				} else {
+					field.style.display = isDiaspora ? 'block' : 'none';
+				}
+			});
+		}
 	}
 
+	// Adjust button display for diaspora users (they only see 4 sections)
+	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+	const isDiaspora = locationAnswer && locationAnswer.value === 'etranger';
+	const effectiveTotalSections = isDiaspora ? 10 : totalSections; // Diaspora still goes to 10, but skips 2-7
+	
 	btnPrevious.style.display = sectionNumber === 1 ? 'none' : 'block';
-	btnNext.style.display = sectionNumber === totalSections ? 'none' : 'block';
-	btnSubmit.style.display = sectionNumber === totalSections ? 'block' : 'none';
+	btnNext.style.display = sectionNumber === effectiveTotalSections ? 'none' : 'block';
+	btnSubmit.style.display = sectionNumber === effectiveTotalSections ? 'block' : 'none';
 
 	updateProgress();
 	window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -196,6 +225,17 @@ function validateSection(sectionNumber) {
 
 	requiredFields.forEach(field => {
 		const formGroup = field.closest('.form-group');
+		
+		// Skip validation for hidden fields (diaspora-only or local-only that are not visible)
+		const diasporaContainer = field.closest('.diaspora-only');
+		const localContainer = field.closest('.local-only');
+		
+		if (diasporaContainer && diasporaContainer.style.display === 'none') {
+			return; // Skip this field
+		}
+		if (localContainer && localContainer.style.display === 'none') {
+			return; // Skip this field
+		}
 		
 		if (field.type === 'radio') {
 			const radioGroup = formGroup.querySelectorAll(`input[name="${field.name}"]`);
@@ -283,6 +323,39 @@ function validateSection(sectionNumber) {
 			}
 		}
 	}
+	
+	// Special validation for Section 10 - different fields for diaspora vs local
+	if (sectionNumber === 10) {
+		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+		if (locationAnswer) {
+			const isDiaspora = locationAnswer.value === 'etranger';
+			
+			// Only validate visible fields based on user type
+			if (isDiaspora) {
+				// Check diaspora-specific required fields
+				const produitsPref = section.querySelectorAll('input[name="produits_preferes_diaspora"]:checked');
+				if (produitsPref.length === 0) {
+					isValid = false;
+					const formGroup = section.querySelector('input[name="produits_preferes_diaspora"]')?.closest('.form-group');
+					if (formGroup) {
+						formGroup.classList.add('invalid');
+						if (!firstInvalidField) firstInvalidField = formGroup;
+					}
+				}
+			} else {
+				// Check local-specific required fields
+				const produitsPref = section.querySelectorAll('input[name="produits_preferes"]:checked');
+				if (produitsPref.length === 0) {
+					isValid = false;
+					const formGroup = section.querySelector('input[name="produits_preferes"]')?.closest('.form-group');
+					if (formGroup) {
+						formGroup.classList.add('invalid');
+						if (!firstInvalidField) firstInvalidField = formGroup;
+					}
+				}
+			}
+		}
+	}
 
 	// Scroll to first invalid field if validation fails
 	if (!isValid && firstInvalidField) {
@@ -324,11 +397,16 @@ btnPrevious.addEventListener('click', function () {
 // Form submission handler
 form.addEventListener('submit', async function (e) {
 	e.preventDefault();
+	
+	console.log('Form submission triggered, current section:', currentSection);
 
 	if (!validateSection(currentSection)) {
 		// Fields are highlighted, no alert needed
+		console.log('Validation failed for section', currentSection);
 		return;
 	}
+	
+	console.log('Validation passed, proceeding with submission...');
 
 	// Disable submit button
 	btnSubmit.disabled = true;
