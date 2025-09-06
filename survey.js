@@ -13,7 +13,7 @@ const errorMessage = document.getElementById('errorMessage');
 const loading = document.getElementById('loading');
 
 let currentSection = 1;
-let totalSections = sections.length; // Will be updated based on diaspora status
+let totalSections = 9; // Fixed to 9 since everyone sees section 8
 let isDiaspora = false;
 
 // Initialize radio and checkbox styling
@@ -405,6 +405,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	// Initialize progress
 	updateProgress();
+	
+	// Set total questions to 9 from the start
+	const totalQSpan = document.getElementById('totalQ');
+	if (totalQSpan) totalQSpan.textContent = '9';
 });
 
 // Clear draft on successful submission
