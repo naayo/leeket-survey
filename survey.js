@@ -1,5 +1,5 @@
 // Survey form JavaScript with Netlify Functions integration
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTrEqoLprfcDNVNdbIC-ZIIpg_wTtoNk5Ux3l9Has/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzA4VOEmB5snYnP0sYFBAPWflPyMW8b_AG_vhd1H3osEiKe31iSrr3VMgDr1KZmoNNh/exec';
 const form = document.getElementById('surveyForm');
 const sections = document.querySelectorAll('.section');
 const progressBar = document.getElementById('progressBar');
