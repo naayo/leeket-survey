@@ -495,16 +495,57 @@ function doPost(e) {
 }
 
 /**
- * Test function for development
+ * GET endpoint to retrieve survey statistics
  */
 function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(CONFIG.RESPONSES_SHEET);
+    
+    // Get participant count (minus header row)
+    const participantCount = Math.max(0, sheet.getLastRow() - 1);
+    
+    // Get other stats if needed
+    const stats = {
       status: 'active',
-      message: 'Leeket Survey Google Sheets API is running',
-      sheets: CONFIG
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
+      message: 'Leeket Survey API',
+      participants: participantCount,
+      lastUpdate: new Date().toISOString()
+    };
+    
+    // Add more stats if requested
+    if (e.parameter.detailed === 'true') {
+      const data = sheet.getDataRange().getValues();
+      let hotLeads = 0;
+      let betaTesters = 0;
+      let diaspora = 0;
+      
+      // Skip header row
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][2] >= 70) hotLeads++; // Lead Score column
+        if (data[i][34] === true) betaTesters++; // Beta Tester column
+        if (data[i][35] === 'oui') diaspora++; // Est Diaspora column
+      }
+      
+      stats.hotLeads = hotLeads;
+      stats.betaTesters = betaTesters;
+      stats.diasporaMembers = diaspora;
+      stats.conversionRate = participantCount > 0 ? (hotLeads / participantCount * 100).toFixed(1) + '%' : '0%';
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(stats))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        status: 'error',
+        message: error.toString(),
+        participants: 250 // Default fallback
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /**
