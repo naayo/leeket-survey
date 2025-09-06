@@ -177,35 +177,62 @@ function validateSection(sectionNumber) {
 	const section = document.querySelector(`[data-section="${sectionNumber}"]`);
 	const requiredFields = section.querySelectorAll('[required]');
 	let isValid = true;
+	let firstInvalidField = null;
+
+	// Clear previous invalid states
+	section.querySelectorAll('.form-group.invalid').forEach(group => {
+		group.classList.remove('invalid');
+	});
 
 	requiredFields.forEach(field => {
 		const formGroup = field.closest('.form-group');
-		const errorMsg = formGroup ? formGroup.querySelector('.error') : null;
-
+		
 		if (field.type === 'radio') {
 			const radioGroup = formGroup.querySelectorAll(`input[name="${field.name}"]`);
 			const isChecked = Array.from(radioGroup).some(radio => radio.checked);
 
 			if (!isChecked) {
 				isValid = false;
-				if (errorMsg) errorMsg.style.display = 'block';
+				if (formGroup) {
+					formGroup.classList.add('invalid');
+					if (!firstInvalidField) firstInvalidField = formGroup;
+				}
 			} else {
-				if (errorMsg) errorMsg.style.display = 'none';
+				if (formGroup) formGroup.classList.remove('invalid');
+			}
+		} else if (field.type === 'checkbox') {
+			// Handle checkbox validation separately
+			const checkboxGroup = formGroup.querySelectorAll(`input[name="${field.name}"]:checked`);
+			if (checkboxGroup.length === 0) {
+				isValid = false;
+				if (formGroup) {
+					formGroup.classList.add('invalid');
+					if (!firstInvalidField) firstInvalidField = formGroup;
+				}
+			} else {
+				if (formGroup) formGroup.classList.remove('invalid');
 			}
 		} else if (field.value.trim() === '') {
 			isValid = false;
-			if (errorMsg) errorMsg.style.display = 'block';
+			if (formGroup) {
+				formGroup.classList.add('invalid');
+				if (!firstInvalidField) firstInvalidField = formGroup;
+			}
 		} else {
-			if (errorMsg) errorMsg.style.display = 'none';
+			if (formGroup) formGroup.classList.remove('invalid');
 		}
 	});
 
 	// Special validation for Section 2 - at least one shopping location
 	if (sectionNumber === 2) {
 		const lieuxChecked = section.querySelectorAll('input[name="lieu_courses"]:checked');
+		const formGroup = section.querySelector('.form-group');
 		if (lieuxChecked.length === 0) {
 			isValid = false;
-			alert('Veuillez sélectionner au moins un lieu de courses');
+			if (formGroup) {
+				formGroup.classList.add('invalid');
+				if (!firstInvalidField) firstInvalidField = formGroup;
+			}
 		}
 	}
 
@@ -214,7 +241,11 @@ function validateSection(sectionNumber) {
 		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
 		if (!locationAnswer) {
 			isValid = false;
-			alert('Veuillez indiquer où vous vivez actuellement');
+			const formGroup = section.querySelector('.form-group');
+			if (formGroup) {
+				formGroup.classList.add('invalid');
+				if (!firstInvalidField) firstInvalidField = formGroup;
+			}
 		}
 	}
 
@@ -227,12 +258,25 @@ function validateSection(sectionNumber) {
 		if (locationAnswer) {
 			if (locationAnswer.value === 'senegal' && localZones.length === 0) {
 				isValid = false;
-				alert('Veuillez sélectionner au moins une zone de livraison');
+				const formGroup = section.querySelector('.local-only .form-group') || section.querySelector('.form-group');
+				if (formGroup) {
+					formGroup.classList.add('invalid');
+					if (!firstInvalidField) firstInvalidField = formGroup;
+				}
 			} else if (locationAnswer.value === 'etranger' && diasporaZones.length === 0) {
 				isValid = false;
-				alert('Veuillez indiquer où habite votre famille');
+				const formGroup = section.querySelector('[name="zones_famille"]')?.closest('.form-group');
+				if (formGroup) {
+					formGroup.classList.add('invalid');
+					if (!firstInvalidField) firstInvalidField = formGroup;
+				}
 			}
 		}
+	}
+
+	// Scroll to first invalid field if validation fails
+	if (!isValid && firstInvalidField) {
+		firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	}
 
 	return isValid;
@@ -250,9 +294,8 @@ btnNext.addEventListener('click', function () {
 			currentSection++;
 		}
 		showSection(currentSection);
-	} else {
-		alert('Veuillez remplir tous les champs requis');
 	}
+	// No alert needed - fields are now highlighted visually
 });
 
 // Previous button handler
@@ -273,7 +316,7 @@ form.addEventListener('submit', async function (e) {
 	e.preventDefault();
 
 	if (!validateSection(currentSection)) {
-		alert('Veuillez remplir tous les champs requis');
+		// Fields are highlighted, no alert needed
 		return;
 	}
 

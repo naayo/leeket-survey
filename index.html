@@ -409,10 +409,50 @@
         }
 
         .error {
-            color: var(--primary-green-dark);
+            color: #e74c3c;
             font-size: 13px;
             margin-top: var(--spacing-xs);
             display: none;
+        }
+        
+        /* Field highlighting for validation */
+        .form-group.invalid input,
+        .form-group.invalid select,
+        .form-group.invalid textarea {
+            border: 2px solid #e74c3c !important;
+            background-color: #fff5f5 !important;
+            animation: shake 0.5s;
+        }
+        
+        .form-group.invalid label {
+            color: #e74c3c;
+        }
+        
+        .form-group.invalid .error {
+            display: block !important;
+            animation: fadeIn 0.3s;
+        }
+        
+        /* Highlight missing radio/checkbox groups */
+        .form-group.invalid .radio-group,
+        .form-group.invalid .checkbox-group {
+            padding: 10px;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            background-color: #fff5f5;
+            animation: shake 0.5s;
+        }
+        
+        /* Shake animation for attention */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .error-message {
