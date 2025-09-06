@@ -407,8 +407,100 @@ function autoSaveDraft() {
 form.addEventListener('input', autoSaveDraft);
 form.addEventListener('change', autoSaveDraft);
 
+// Check survey status on page load
+async function checkSurveyStatus() {
+	// Check if survey is closed
+	if (typeof SURVEY_CONFIG !== 'undefined') {
+		// Force closed for testing
+		if (SURVEY_CONFIG.forceClosed) {
+			return showClosureScreen();
+		}
+		
+		// Force open overrides all other settings
+		if (SURVEY_CONFIG.forceOpen) {
+			return;
+		}
+		
+		// Check main status
+		if (SURVEY_CONFIG.status === 'closed') {
+			return showClosureScreen();
+		}
+		
+		// Check closure date if set
+		if (SURVEY_CONFIG.closureDate) {
+			const closureTime = new Date(SURVEY_CONFIG.closureDate).getTime();
+			if (new Date().getTime() > closureTime) {
+				return showClosureScreen();
+			}
+		}
+	}
+	
+	// Try to get stats from Google Sheets to check target responses
+	try {
+		const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats');
+		const stats = await response.json();
+		
+		if (SURVEY_CONFIG && SURVEY_CONFIG.targetResponses && stats.totalResponses >= SURVEY_CONFIG.targetResponses) {
+			return showClosureScreen(stats);
+		}
+	} catch (error) {
+		console.log('Could not fetch stats:', error);
+	}
+}
+
+// Show the closure screen
+function showClosureScreen(stats = null) {
+	// Hide survey form
+	const surveyContainer = document.querySelector('.survey-container');
+	if (surveyContainer) {
+		surveyContainer.style.display = 'none';
+	}
+	
+	// Show closure screen
+	const closureScreen = document.getElementById('surveyClosedScreen');
+	if (closureScreen) {
+		closureScreen.style.display = 'block';
+		
+		// Update statistics if available
+		if (stats) {
+			const totalElement = closureScreen.querySelector('.stat-number');
+			if (totalElement) {
+				totalElement.textContent = stats.totalResponses || '1000+';
+			}
+		}
+		
+		// Update messages from config if available
+		if (typeof SURVEY_CONFIG !== 'undefined' && SURVEY_CONFIG.messages) {
+			const titleElement = closureScreen.querySelector('h1');
+			const messageElement = closureScreen.querySelector('p:nth-of-type(1)');
+			const subtextElement = closureScreen.querySelector('p:nth-of-type(2)');
+			const footerElement = closureScreen.querySelector('.closure-footer p:nth-of-type(1)');
+			const contactElement = closureScreen.querySelector('.closure-footer p:nth-of-type(2)');
+			
+			if (titleElement && SURVEY_CONFIG.messages.closureTitle) {
+				titleElement.textContent = SURVEY_CONFIG.messages.closureTitle;
+			}
+			if (messageElement && SURVEY_CONFIG.messages.closureMessage) {
+				messageElement.textContent = SURVEY_CONFIG.messages.closureMessage;
+			}
+			if (subtextElement && SURVEY_CONFIG.messages.closureSubtext) {
+				subtextElement.textContent = SURVEY_CONFIG.messages.closureSubtext;
+			}
+			if (footerElement && SURVEY_CONFIG.messages.closureFooter) {
+				footerElement.textContent = SURVEY_CONFIG.messages.closureFooter;
+			}
+			if (contactElement && SURVEY_CONFIG.messages.closureContact) {
+				contactElement.textContent = SURVEY_CONFIG.messages.closureContact;
+			}
+		}
+	}
+}
+
 // Load draft on page load
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+	// Check if survey is closed first
+	await checkSurveyStatus();
+	
 	const draft = localStorage.getItem('leeket_survey_draft');
 	if (draft) {
 		try {

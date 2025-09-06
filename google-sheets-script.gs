@@ -505,7 +505,19 @@ function doGet(e) {
     // Get participant count (minus header row)
     const participantCount = Math.max(0, sheet.getLastRow() - 1);
     
-    // Get other stats if needed
+    // Handle different actions
+    if (e.parameter.action === 'getStats') {
+      // Return stats for closure screen
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: true,
+          totalResponses: participantCount,
+          lastUpdate: new Date().toISOString()
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Default response
     const stats = {
       status: 'active',
       message: 'Leeket Survey API',
