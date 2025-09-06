@@ -287,6 +287,55 @@ function generatePromoCode() {
 }
 
 /**
+ * Check for duplicate submissions
+ */
+function checkDuplicate(sheet, phone, email) {
+  if (!sheet || sheet.getLastRow() < 2) return null;
+  
+  const dataRange = sheet.getDataRange();
+  const values = dataRange.getValues();
+  const headers = values[0];
+  
+  // Find column indices
+  const phoneCol = headers.indexOf('Telephone');
+  const emailCol = headers.indexOf('Email');
+  const timestampCol = headers.indexOf('Timestamp');
+  const promoCol = headers.indexOf('Promo Code');
+  
+  // Check each row for duplicates
+  for (let i = 1; i < values.length; i++) {
+    const rowPhone = values[i][phoneCol];
+    const rowEmail = values[i][emailCol];
+    
+    // Check if phone matches (required field)
+    if (phone && rowPhone && 
+        phone.toString().replace(/\s/g, '') === rowPhone.toString().replace(/\s/g, '')) {
+      return {
+        isDuplicate: true,
+        existingRow: i + 1,
+        existingPromo: values[i][promoCol],
+        existingDate: values[i][timestampCol],
+        matchType: 'phone'
+      };
+    }
+    
+    // Check if email matches (if provided)
+    if (email && rowEmail && 
+        email.toString().toLowerCase() === rowEmail.toString().toLowerCase()) {
+      return {
+        isDuplicate: true,
+        existingRow: i + 1,
+        existingPromo: values[i][promoCol],
+        existingDate: values[i][timestampCol],
+        matchType: 'email'
+      };
+    }
+  }
+  
+  return null;
+}
+
+/**
  * Handle POST request from the form
  */
 function doPost(e) {
@@ -301,6 +350,25 @@ function doPost(e) {
     // Initialize if needed
     if (!sheet || sheet.getLastRow() === 0) {
       sheet = initializeSpreadsheet();
+    }
+    
+    // Check for duplicates
+    const duplicate = checkDuplicate(sheet, data.telephone, data.email);
+    
+    if (duplicate) {
+      // Return duplicate warning with existing promo code
+      const daysSince = Math.floor((new Date() - new Date(duplicate.existingDate)) / (1000 * 60 * 60 * 24));
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: false,
+          isDuplicate: true,
+          message: `Vous avez déjà participé au sondage il y a ${daysSince} jour(s).`,
+          promoCode: duplicate.existingPromo,
+          matchType: duplicate.matchType,
+          alreadySubmitted: true
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
     // Calculate lead score and segment

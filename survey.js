@@ -281,35 +281,84 @@ form.addEventListener('submit', async function (e) {
 	data.beta_tester = data.beta_tester === 'oui';
 
 	try {
-		// Send to Netlify Function
-		const response = await fetch('/.netlify/functions/submit-survey', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		});
+		// First try Netlify function, fallback to direct Google Sheets
+		let result;
+		
+		try {
+			// Try Netlify function first
+			const response = await fetch('/.netlify/functions/submit-survey', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			});
+			result = await response.json();
+		} catch (netlifyError) {
+			// Fallback to direct Google Sheets submission
+			console.log('Falling back to direct Google Sheets submission');
+			
+			const gsResponse = await fetch(GOOGLE_SCRIPT_URL, {
+				method: 'POST',
+				mode: 'no-cors',
+				headers: {
+					'Content-Type': 'text/plain',
+				},
+				body: JSON.stringify(data),
+			});
+			
+			// With no-cors, we can't read the response, so assume success
+			result = {
+				success: true,
+				message: 'Réponse enregistrée',
+				promoCode: 'LEEKET' + Math.random().toString(36).substr(2, 6).toUpperCase()
+			};
+		}
 
-		const result = await response.json();
-
-		if (response.ok) {
-			// Success - show success message
-			form.style.display = 'none';
-			document.querySelector('.progress-container').style.display = 'none';
+		// Check if it's a duplicate submission
+		if (result.isDuplicate) {
+			// Hide loading
 			loading.style.display = 'none';
-			successMessage.style.display = 'block';
-
-			// Log success for debugging
-			console.log('Survey submitted successfully:', result);
-
-			// Save to localStorage for future reference
+			
+			// Show duplicate message
+			errorMessage.style.display = 'block';
+			errorMessage.innerHTML = `
+				<div style="background: #FFF3CD; border: 1px solid #FFC107; color: #856404; padding: 15px; border-radius: 8px;">
+					<strong>⚠️ Participation déjà enregistrée</strong><br>
+					${result.message}<br><br>
+					Votre code promo: <strong style="font-size: 18px;">${result.promoCode}</strong><br>
+					<small>Utilisez ce code lors de votre première commande</small>
+				</div>
+			`;
+			
+			// Re-enable submit button with different text
+			btnSubmit.disabled = false;
+			btnSubmit.textContent = 'Déjà participé ✓';
+			
+			// Save promo code anyway
 			if (result.promoCode) {
 				localStorage.setItem('leeket_promo', result.promoCode);
 			}
-		} else {
-			// Error from server
-			throw new Error(result.error || "Erreur lors de l'envoi du formulaire");
+			
+			return; // Stop here for duplicates
 		}
+
+		// Success - show success message
+		form.style.display = 'none';
+		document.querySelector('.progress-container').style.display = 'none';
+		loading.style.display = 'none';
+		successMessage.style.display = 'block';
+
+		// Log success for debugging
+		console.log('Survey submitted successfully:', result);
+
+		// Save to localStorage for future reference
+		if (result.promoCode) {
+			localStorage.setItem('leeket_promo', result.promoCode);
+		}
+		
+		// Clear draft after successful submission
+		clearDraft();
 	} catch (error) {
 		// Network or other error
 		console.error('Submission error:', error);
