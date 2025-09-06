@@ -602,25 +602,31 @@
                         <span class="error">Ce champ est requis</span>
                     </div>
                     
-                    <!-- Country for diaspora -->
+                    <!-- Country/Region for diaspora -->
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Dans quel pays résidez-vous? <span class="required">*</span></label>
-                        <select name="pays_residence">
-                            <option value="">Choisir votre pays</option>
-                            <option value="france">France 🇫🇷</option>
-                            <option value="usa">États-Unis 🇺🇸</option>
-                            <option value="canada">Canada 🇨🇦</option>
-                            <option value="espagne">Espagne 🇪🇸</option>
-                            <option value="italie">Italie 🇮🇹</option>
-                            <option value="belgique">Belgique 🇧🇪</option>
-                            <option value="allemagne">Allemagne 🇩🇪</option>
-                            <option value="uk">Royaume-Uni 🇬🇧</option>
-                            <option value="maroc">Maroc 🇲🇦</option>
-                            <option value="cote-ivoire">Côte d'Ivoire 🇨🇮</option>
-                            <option value="mali">Mali 🇲🇱</option>
-                            <option value="gabon">Gabon 🇬🇦</option>
-                            <option value="autre">Autre</option>
-                        </select>
+                        <label>Dans quelle région du monde résidez-vous? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_region" value="europe" required>
+                                <span>Europe (France, Belgique, Italie, Espagne...)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_region" value="amerique_nord">
+                                <span>Amérique du Nord (USA, Canada)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_region" value="afrique">
+                                <span>Afrique (Maroc, Côte d'Ivoire, Gabon...)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_region" value="moyen_orient">
+                                <span>Moyen-Orient (Dubai, Arabie Saoudite...)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_region" value="autre">
+                                <span>Autre région</span>
+                            </label>
+                        </div>
                         <span class="error">Ce champ est requis</span>
                     </div>
 
@@ -1353,29 +1359,7 @@
                         <span class="error">Veuillez sélectionner au moins une zone</span>
                     </div>
 
-                    <!-- DIASPORA Section 8: Localisation et usage -->
-                    <div class="form-group diaspora-only" style="display: none;">
-                        <label>Vivez-vous actuellement hors du Sénégal? <span class="required">*</span></label>
-                        <div class="radio-group">
-                            <label class="radio-item">
-                                <input type="radio" name="diaspora_location" value="europe" required>
-                                <span>Oui, en Europe</span>
-                            </label>
-                            <label class="radio-item">
-                                <input type="radio" name="diaspora_location" value="amerique_nord">
-                                <span>Oui, en Amérique du Nord</span>
-                            </label>
-                            <label class="radio-item">
-                                <input type="radio" name="diaspora_location" value="ailleurs">
-                                <span>Oui, ailleurs</span>
-                            </label>
-                            <label class="radio-item">
-                                <input type="radio" name="diaspora_location" value="senegal">
-                                <span>Non, je vis au Sénégal</span>
-                            </label>
-                        </div>
-                    </div>
-                    
+                    <!-- DIASPORA Section 8: Intérêts et usage -->
                     <div class="form-group diaspora-only" style="display: none;">
                         <label>Seriez-vous intéressé(e) à commander des produits pour vos proches restés au pays? <span class="required">*</span></label>
                         <div class="radio-group">

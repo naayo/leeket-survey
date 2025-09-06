@@ -70,9 +70,11 @@ localisationRadios.forEach(radio => {
 			// Show diaspora fields
 			diasporaOnlyFields.forEach(field => {
 				field.style.display = 'block';
-				// Make country required
-				const countrySelect = field.querySelector('select[name="pays_residence"]');
-				if (countrySelect) countrySelect.setAttribute('required', 'required');
+				// Make region required
+				const regionRadios = field.querySelectorAll('input[name="diaspora_region"]');
+				if (regionRadios.length > 0) {
+					regionRadios.forEach(radio => radio.setAttribute('required', 'required'));
+				}
 			});
 			// Show engagement message
 			if (diasporaEngagement) diasporaEngagement.style.display = 'block';
