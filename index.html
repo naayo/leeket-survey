@@ -555,9 +555,31 @@
                         Faisons connaissance
                     </h2>
 
+                    <!-- Location Question (Local vs Diaspora) -->
                     <div class="form-group">
+                        <label>Où vivez-vous actuellement? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="localisation" value="senegal" required>
+                                <span>Au Sénégal 🇸🇳</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="localisation" value="etranger">
+                                <span>À l'étranger (diaspora) 🌍</span>
+                            </label>
+                        </div>
+                        <span class="error">Ce champ est requis</span>
+                    </div>
+                    
+                    <!-- Micro-engagement for diaspora -->
+                    <div class="diaspora-engagement" style="display: none; background: #E8F5E9; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #2ECC71;">
+                        <p style="margin: 0; color: #1B5E20;">💚 <strong>Merci !</strong> Vos réponses aident aussi vos proches à Dakar à mieux faire leur marché.</p>
+                    </div>
+                    
+                    <!-- Quartier for locals -->
+                    <div class="form-group local-only" style="display: none;">
                         <label>Dans quel quartier habitez-vous? <span class="required">*</span></label>
-                        <select name="quartier" required>
+                        <select name="quartier">
                             <option value="">Sélectionnez votre quartier</option>
                             <option value="plateau">Plateau</option>
                             <option value="almadies">Almadies</option>
@@ -573,6 +595,28 @@
                             <option value="ouakam">Ouakam</option>
                             <option value="yoff">Yoff</option>
                             <option value="ngor">Ngor</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <span class="error">Ce champ est requis</span>
+                    </div>
+                    
+                    <!-- Country for diaspora -->
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Dans quel pays résidez-vous? <span class="required">*</span></label>
+                        <select name="pays_residence">
+                            <option value="">Choisir votre pays</option>
+                            <option value="france">France 🇫🇷</option>
+                            <option value="usa">États-Unis 🇺🇸</option>
+                            <option value="canada">Canada 🇨🇦</option>
+                            <option value="espagne">Espagne 🇪🇸</option>
+                            <option value="italie">Italie 🇮🇹</option>
+                            <option value="belgique">Belgique 🇧🇪</option>
+                            <option value="allemagne">Allemagne 🇩🇪</option>
+                            <option value="uk">Royaume-Uni 🇬🇧</option>
+                            <option value="maroc">Maroc 🇲🇦</option>
+                            <option value="cote-ivoire">Côte d'Ivoire 🇨🇮</option>
+                            <option value="mali">Mali 🇲🇱</option>
+                            <option value="gabon">Gabon 🇬🇦</option>
                             <option value="autre">Autre</option>
                         </select>
                         <span class="error">Ce champ est requis</span>
@@ -1250,208 +1294,219 @@
                     </div>
                 </div>
 
-                <!-- Section 8: Diaspora - Identification -->
+                <!-- Section 8: Different for locals and diaspora -->
                 <div class="section" data-section="8">
                     <h2 class="section-title">
                         <span class="section-number">8</span>
-                        Pour nos compatriotes de la diaspora
+                        <span class="local-only" style="display: none;">Zones de livraison prioritaires</span>
+                        <span class="diaspora-only" style="display: none;">Diaspora - Vos intérêts</span>
                     </h2>
 
-                    <div class="form-group">
-                        <label>Êtes-vous membre de la diaspora sénégalaise? <span class="required">*</span></label>
+                    <!-- For locals: preferred delivery zones -->
+                    <div class="form-group local-only" style="display: none;">
+                        <label>Dans quels quartiers souhaitez-vous que Leeket livre? <span class="required">*</span></label>
+                        <p style="font-size: 14px; color: #666; margin-bottom: 10px;">📦 Choisissez les zones où vous ou vos proches pourriez recevoir des livraisons</p>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="plateau-almadies">
+                                <span>Plateau / Almadies</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="mermoz-sacre-coeur">
+                                <span>Mermoz / Sacré-Cœur</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="point-e-fann">
+                                <span>Point E / Fann</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="parcelles-grand-dakar">
+                                <span>Parcelles / Grand Dakar</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="liberte-hlm">
+                                <span>Liberté / HLM</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="medina">
+                                <span>Médina</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="yoff-ngor">
+                                <span>Yoff / Ngor</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="zones_livraison" value="ouakam">
+                                <span>Ouakam</span>
+                            </label>
+                        </div>
+                        <span class="error">Veuillez sélectionner au moins une zone</span>
+                    </div>
+
+                    <!-- DIASPORA Section 8: Localisation et usage -->
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Vivez-vous actuellement hors du Sénégal? <span class="required">*</span></label>
                         <div class="radio-group">
                             <label class="radio-item">
-                                <input type="radio" name="est_diaspora" value="oui" required>
-                                <span>Oui, je vis à l'étranger</span>
+                                <input type="radio" name="diaspora_location" value="europe" required>
+                                <span>Oui, en Europe</span>
                             </label>
                             <label class="radio-item">
-                                <input type="radio" name="est_diaspora" value="non">
+                                <input type="radio" name="diaspora_location" value="amerique_nord">
+                                <span>Oui, en Amérique du Nord</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_location" value="ailleurs">
+                                <span>Oui, ailleurs</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="diaspora_location" value="senegal">
                                 <span>Non, je vis au Sénégal</span>
                             </label>
                         </div>
                     </div>
-
+                    
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Dans quel pays résidez-vous actuellement? <span class="required">*</span></label>
-                        <select name="pays_residence">
-                            <option value="">Sélectionnez votre pays</option>
-                            <option value="france">France</option>
-                            <option value="usa">États-Unis</option>
-                            <option value="canada">Canada</option>
-                            <option value="italie">Italie</option>
-                            <option value="espagne">Espagne</option>
-                            <option value="belgique">Belgique</option>
-                            <option value="allemagne">Allemagne</option>
-                            <option value="uk">Royaume-Uni</option>
-                            <option value="suisse">Suisse</option>
-                            <option value="pays-bas">Pays-Bas</option>
-                            <option value="maroc">Maroc</option>
-                            <option value="cote-ivoire">Côte d'Ivoire</option>
-                            <option value="gabon">Gabon</option>
-                            <option value="mauritanie">Mauritanie</option>
-                            <option value="dubai">Émirats Arabes Unis</option>
-                            <option value="autre">Autre</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group diaspora-only" style="display: none;">
-                        <label>À quelle fréquence envoyez-vous de l'aide alimentaire à votre famille au Sénégal? <span class="required">*</span></label>
+                        <label>Seriez-vous intéressé(e) à commander des produits pour vos proches restés au pays? <span class="required">*</span></label>
                         <div class="radio-group">
                             <label class="radio-item">
-                                <input type="radio" name="freq_aide_alimentaire" value="mensuel">
-                                <span>Tous les mois</span>
+                                <input type="radio" name="interet_commande_proches" value="tres_interesse" required>
+                                <span>Très intéressé(e)</span>
                             </label>
                             <label class="radio-item">
-                                <input type="radio" name="freq_aide_alimentaire" value="trimestriel">
-                                <span>Tous les 3 mois</span>
+                                <input type="radio" name="interet_commande_proches" value="plutot_interesse">
+                                <span>Plutôt intéressé(e)</span>
                             </label>
                             <label class="radio-item">
-                                <input type="radio" name="freq_aide_alimentaire" value="occasionnel">
-                                <span>Occasionnellement (fêtes, événements)</span>
+                                <input type="radio" name="interet_commande_proches" value="peut_etre">
+                                <span>Peut-être</span>
                             </label>
                             <label class="radio-item">
-                                <input type="radio" name="freq_aide_alimentaire" value="jamais">
-                                <span>Je n'envoie pas d'aide alimentaire</span>
+                                <input type="radio" name="interet_commande_proches" value="pas_vraiment">
+                                <span>Pas vraiment</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="interet_commande_proches" value="pas_du_tout">
+                                <span>Pas du tout</span>
                             </label>
                         </div>
                     </div>
-
+                    
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Comment aidez-vous actuellement votre famille pour les courses? (Plusieurs choix possibles)</label>
+                        <label>Pour quelles occasions pourriez-vous utiliser ce service? (Plusieurs choix possibles)</label>
                         <div class="checkbox-group">
                             <label class="checkbox-item">
-                                <input type="checkbox" name="methode_aide_actuelle" value="argent">
-                                <span>J'envoie de l'argent (transfert)</span>
+                                <input type="checkbox" name="occasions_utilisation" value="fetes_religieuses">
+                                <span>Fêtes religieuses (Tabaski, Korité...)</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="methode_aide_actuelle" value="visite">
-                                <span>J'apporte des produits lors de mes visites</span>
+                                <input type="checkbox" name="occasions_utilisation" value="evenements_familiaux">
+                                <span>Événements familiaux</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="methode_aide_actuelle" value="quelqu'un">
-                                <span>Je demande à quelqu'un sur place d'acheter</span>
+                                <input type="checkbox" name="occasions_utilisation" value="surprise">
+                                <span>Surprise pour faire plaisir</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="methode_aide_actuelle" value="colis">
-                                <span>J'envoie des colis</span>
+                                <input type="checkbox" name="occasions_utilisation" value="depannage_urgent">
+                                <span>Dépannage urgent</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="methode_aide_actuelle" value="aucune">
-                                <span>Je n'aide pas pour les courses</span>
+                                <input type="checkbox" name="occasions_utilisation" value="usage_regulier">
+                                <span>Usage régulier</span>
                             </label>
                         </div>
-                    </div>
-
-                    <div class="form-group diaspora-only" style="display: none;">
-                        <label>Quel est votre budget mensuel moyen pour aider votre famille au Sénégal (toutes aides confondues)?</label>
-                        <select name="budget_aide_mensuel">
-                            <option value="">Sélectionnez</option>
-                            <option value="<50">Moins de 50€/mois</option>
-                            <option value="50-100">50€ - 100€/mois</option>
-                            <option value="100-200">100€ - 200€/mois</option>
-                            <option value="200-300">200€ - 300€/mois</option>
-                            <option value="300-500">300€ - 500€/mois</option>
-                            <option value="500+">Plus de 500€/mois</option>
-                        </select>
                     </div>
                 </div>
 
-                <!-- Section 9: Diaspora - Service Leeket -->
+                <!-- Section 9: Different for locals and diaspora -->
                 <div class="section" data-section="9">
                     <h2 class="section-title">
                         <span class="section-number">9</span>
-                        Leeket pour la diaspora
+                        <span class="local-only" style="display: none;">Votre expérience Leeket</span>
+                        <span class="diaspora-only" style="display: none;">Services diaspora souhaités</span>
                     </h2>
 
-                    <div class="info-box">
-                        <strong>🌍 Service spécial diaspora</strong>
-                        <p>Commandez et payez depuis l'étranger, nous livrons à votre famille au Sénégal!</p>
-                        <ul class="feature-list">
-                            <li>
-                                <span class="icon">💳</span>
-                                <span>Paiement sécurisé en ligne (CB, PayPal)</span>
-                            </li>
-                            <li>
-                                <span class="icon">📱</span>
-                                <span>Suivi en temps réel de la commande</span>
-                            </li>
-                            <li>
-                                <span class="icon">📸</span>
-                                <span>Photo de confirmation de livraison</span>
-                            </li>
-                            <li>
-                                <span class="icon">🎁</span>
-                                <span>Packs spéciaux fêtes (Korité, Tabaski, etc.)</span>
-                            </li>
-                            <li>
-                                <span class="icon">🔄</span>
-                                <span>Abonnements mensuels automatiques</span>
-                            </li>
-                        </ul>
-                    </div>
-
+                    <!-- DIASPORA Section 9: Services souhaités -->
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Ce service vous intéresse-t-il pour aider votre famille? <span class="required">*</span></label>
-                        <div class="likert-scale">
-                            <div class="likert-option">
-                                <input type="radio" name="interet_diaspora" value="1">
-                                <label>Pas du tout</label>
-                            </div>
-                            <div class="likert-option">
-                                <input type="radio" name="interet_diaspora" value="2">
-                                <label>Peu</label>
-                            </div>
-                            <div class="likert-option">
-                                <input type="radio" name="interet_diaspora" value="3">
-                                <label>Moyennement</label>
-                            </div>
-                            <div class="likert-option">
-                                <input type="radio" name="interet_diaspora" value="4">
-                                <label>Beaucoup</label>
-                            </div>
-                            <div class="likert-option">
-                                <input type="radio" name="interet_diaspora" value="5">
-                                <label>Énormément</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group diaspora-only" style="display: none;">
-                        <label>Quelles fonctionnalités sont les plus importantes pour vous? (Max 3)</label>
+                        <label>Quelles fonctionnalités vous sembleraient essentielles? (Plusieurs choix possibles)</label>
                         <div class="checkbox-group">
                             <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="paiement_securise">
-                                <span>Paiement 100% sécurisé depuis l'étranger</span>
+                                <input type="checkbox" name="fonctionnalites_essentielles" value="confirmation_sms">
+                                <span>Confirmation de réception par SMS/WhatsApp</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="suivi_temps_reel">
-                                <span>Suivi en temps réel de la livraison</span>
+                                <input type="checkbox" name="fonctionnalites_essentielles" value="photos_produits">
+                                <span>Photos des produits livrés</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="photo_confirmation">
-                                <span>Photo/vidéo de confirmation de réception</span>
+                                <input type="checkbox" name="fonctionnalites_essentielles" value="message_personnel">
+                                <span>Possibilité d'ajouter un message personnel</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="abonnement">
-                                <span>Abonnement mensuel automatique</span>
+                                <input type="checkbox" name="fonctionnalites_essentielles" value="suivi_temps_reel">
+                                <span>Suivi de livraison en temps réel</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="packs_fetes">
-                                <span>Packs spéciaux pour les fêtes</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="choix_beneficiaire">
-                                <span>Le bénéficiaire peut choisir ses produits</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="multi_beneficiaires">
-                                <span>Livraison à plusieurs bénéficiaires</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="fonctionnalites_diaspora" value="historique">
-                                <span>Historique détaillé des commandes</span>
+                                <input type="checkbox" name="fonctionnalites_essentielles" value="service_client">
+                                <span>Service client réactif</span>
                             </label>
                         </div>
+                    </div>
+                    
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quel type de produits vous intéresserait le plus? (Plusieurs choix possibles)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="types_produits" value="packs_recettes">
+                                <span>Packs recettes traditionnelles</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="types_produits" value="produits_necessite">
+                                <span>Produits de première nécessité</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="types_produits" value="paniers_surprise">
+                                <span>Paniers surprise</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="types_produits" value="produits_locaux">
+                                <span>Produits locaux authentiques</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="types_produits" value="articles_enfants">
+                                <span>Articles pour enfants</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Comment préféreriez-vous organiser vos commandes? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="preference_commande" value="je_choisis" required>
+                                <span>Je choisis tout depuis l'étranger</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="preference_commande" value="consultation_proches">
+                                <span>Je consulte mes proches puis commande</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="preference_commande" value="proches_choisissent">
+                                <span>Mes proches choisissent, je paie</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="preference_commande" value="service_personnalise">
+                                <span>Service personnalisé avec conseiller</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- LOCAL Section 9: Keep existing questions for locals -->
+                    <!-- These questions will remain for local users -->
+                    <div class="form-group local-only" style="display: none;">
+                        <label>Avez-vous des suggestions pour améliorer Leeket?</label>
+                        <textarea name="suggestions_locaux" rows="4" placeholder="Vos idées et suggestions..."></textarea>
                     </div>
 
                     <div class="form-group diaspora-only" style="display: none;">
@@ -1518,6 +1573,118 @@
                         <div class="info-box">
                             <strong>💚 Merci pour votre intérêt!</strong>
                             <p>Les questions suivantes concernent spécifiquement notre service pour la diaspora. Vous pouvez passer directement à la soumission du formulaire.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 10: Suggestions - Different for locals and diaspora -->
+                <div class="section" data-section="10">
+                    <h2 class="section-title">
+                        <span class="section-number">10</span>
+                        Vos suggestions
+                    </h2>
+
+                    <!-- DIASPORA Section 10: Suggestions spécifiques -->
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quels services manquent actuellement pour envoyer quelque chose à vos proches?</label>
+                        <textarea name="services_manquants" rows="4" placeholder="Décrivez les services qui vous faciliteraient la vie..."></textarea>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quelles difficultés rencontrez-vous habituellement? (Plusieurs choix possibles)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="confiance_qualite">
+                                <span>Manque de confiance dans la qualité</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="processus_complique">
+                                <span>Processus trop compliqué</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="pas_assez_choix">
+                                <span>Pas assez de choix</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="communication_difficile">
+                                <span>Communication difficile</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="delais_longs">
+                                <span>Délais trop longs</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="difficultes_diaspora" value="aucune">
+                                <span>Aucune difficulté</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Quelles fonctionnalités innovantes aimeriez-vous voir?</label>
+                        <textarea name="fonctionnalites_innovantes" rows="4" placeholder="Vos idées pour améliorer le service..."></textarea>
+                    </div>
+
+                    <div class="form-group diaspora-only" style="display: none;">
+                        <label>Recommanderiez-vous ce service à d'autres personnes de la diaspora? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_diaspora" value="certainement" required>
+                                <span>Certainement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_diaspora" value="probablement">
+                                <span>Probablement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_diaspora" value="peut_etre">
+                                <span>Peut-être</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_diaspora" value="probablement_pas">
+                                <span>Probablement pas</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_diaspora" value="certainement_pas">
+                                <span>Certainement pas</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- LOCAL Section 10: Suggestions locales -->
+                    <div class="form-group local-only" style="display: none;">
+                        <label>Avez-vous des suggestions pour améliorer notre service?</label>
+                        <textarea name="suggestions_amelioration" rows="4" placeholder="Vos idées et suggestions..."></textarea>
+                    </div>
+
+                    <div class="form-group local-only" style="display: none;">
+                        <label>Quels autres services aimeriez-vous voir sur Leeket?</label>
+                        <textarea name="services_souhaites" rows="4" placeholder="Services complémentaires que vous aimeriez..."></textarea>
+                    </div>
+
+                    <div class="form-group local-only" style="display: none;">
+                        <label>Recommanderiez-vous Leeket à vos proches? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_locale" value="certainement" required>
+                                <span>Certainement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_locale" value="probablement">
+                                <span>Probablement</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_locale" value="peut_etre">
+                                <span>Peut-être</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_locale" value="probablement_pas">
+                                <span>Probablement pas</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="recommandation_locale" value="certainement_pas">
+                                <span>Certainement pas</span>
+                            </label>
                         </div>
                     </div>
                 </div>

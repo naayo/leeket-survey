@@ -42,8 +42,10 @@ function initializeSpreadsheet() {
     'Segment',
     'Status',
     
-    // Section 1: Profil
-    'Quartier',
+    // Section 1: Profil avec détection précoce
+    'Localisation', // senegal/etranger
+    'Quartier', // LOCAL: quartier de résidence
+    'Pays Residence', // DIASPORA: pays de résidence
     'Age',
     'Taille Foyer',
     'Profession',
@@ -85,18 +87,26 @@ function initializeSpreadsheet() {
     'Prenom',
     'Beta Tester',
     
-    // Section 8-9: Diaspora
-    'Est Diaspora',
-    'Pays Residence',
-    'Freq Aide Alimentaire',
-    'Methode Aide Actuelle',
-    'Budget Aide Mensuel',
-    'Interet Diaspora',
-    'Fonctionnalites Diaspora',
-    'Frais Service Diaspora',
-    'Freq Utilisation Diaspora',
-    'Beneficiaire Quartier',
-    'Nombre Beneficiaires',
+    // Section 8: Zones ou Intérêts
+    'Zones Livraison', // LOCAL: zones de livraison souhaitées
+    'Diaspora Location', // DIASPORA: europe/amerique_nord/ailleurs
+    'Interet Commande Proches', // DIASPORA: intérêt pour commander
+    'Occasions Utilisation', // DIASPORA: occasions d'usage
+    
+    // Section 9: Services souhaités
+    'Suggestions Locaux', // LOCAL: suggestions générales
+    'Fonctionnalites Essentielles', // DIASPORA: fonctionnalités importantes
+    'Types Produits', // DIASPORA: types de produits souhaités
+    'Preference Commande', // DIASPORA: comment organiser commandes
+    
+    // Section 10: Suggestions finales
+    'Services Manquants', // DIASPORA: services manquants
+    'Difficultes Diaspora', // DIASPORA: difficultés rencontrées
+    'Fonctionnalites Innovantes', // DIASPORA: idées innovantes
+    'Recommandation Diaspora', // DIASPORA: recommandation
+    'Suggestions Amelioration', // LOCAL: suggestions amélioration
+    'Services Souhaites', // LOCAL: services souhaités
+    'Recommandation Locale', // LOCAL: recommandation
     
     // Calculated
     'Promo Code',
@@ -245,20 +255,32 @@ function calculateLeadScore(data) {
     score += 8;
   }
   
-  // Diaspora bonus
-  if (data.est_diaspora === 'oui') {
+  // Diaspora or Local specific scoring
+  if (data.localisation === 'etranger') {
+    // Diaspora user bonus
     score += 10;
     
-    const diasporaInterest = parseInt(data.interet_diaspora) || 0;
-    if (diasporaInterest >= 4) {
+    // High interest in ordering for family
+    if (data.interet_commande_proches === 'tres_interesse') {
+      score += 15;
+    } else if (data.interet_commande_proches === 'plutot_interesse') {
       score += 10;
-    } else if (diasporaInterest === 3) {
+    } else if (data.interet_commande_proches === 'peut_etre') {
       score += 5;
     }
     
-    const highDiasporaBudgets = ['200-300', '300-500', '500+'];
-    if (highDiasporaBudgets.includes(data.budget_aide_mensuel)) {
+    // Would recommend to others
+    if (data.recommandation_diaspora === 'certainement') {
       score += 10;
+    } else if (data.recommandation_diaspora === 'probablement') {
+      score += 5;
+    }
+  } else {
+    // Local user recommendation scoring
+    if (data.recommandation_locale === 'certainement') {
+      score += 10;
+    } else if (data.recommandation_locale === 'probablement') {
+      score += 5;
     }
   }
   

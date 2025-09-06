@@ -13,7 +13,7 @@ const errorMessage = document.getElementById('errorMessage');
 const loading = document.getElementById('loading');
 
 let currentSection = 1;
-let totalSections = 9; // Fixed to 9 since everyone sees section 8
+let totalSections = 10; // Now 10 sections total
 let isDiaspora = false;
 
 // Initialize radio and checkbox styling
@@ -30,6 +30,52 @@ document.querySelectorAll('.radio-item input, .checkbox-item input').forEach(inp
 			parent.classList.add('selected');
 		} else {
 			parent.classList.remove('selected');
+		}
+	});
+});
+
+// Handle early diaspora detection in Section 1
+const localisationRadios = document.querySelectorAll('input[name="localisation"]');
+localisationRadios.forEach(radio => {
+	radio.addEventListener('change', function() {
+		const isLocal = this.value === 'senegal';
+		const isDiaspora = this.value === 'etranger';
+		
+		// Show/hide relevant fields
+		const localOnlyFields = document.querySelectorAll('.local-only');
+		const diasporaOnlyFields = document.querySelectorAll('.diaspora-only');
+		const diasporaEngagement = document.querySelector('.diaspora-engagement');
+		
+		if (isLocal) {
+			// Show local fields
+			localOnlyFields.forEach(field => {
+				field.style.display = 'block';
+				const select = field.querySelector('select[name="quartier"]');
+				if (select) select.setAttribute('required', 'required');
+			});
+			// Hide diaspora fields
+			diasporaOnlyFields.forEach(field => {
+				field.style.display = 'none';
+				const inputs = field.querySelectorAll('[required]');
+				inputs.forEach(input => input.removeAttribute('required'));
+			});
+			if (diasporaEngagement) diasporaEngagement.style.display = 'none';
+		} else if (isDiaspora) {
+			// Hide local fields
+			localOnlyFields.forEach(field => {
+				field.style.display = 'none';
+				const select = field.querySelector('select[name="quartier"]');
+				if (select) select.removeAttribute('required');
+			});
+			// Show diaspora fields
+			diasporaOnlyFields.forEach(field => {
+				field.style.display = 'block';
+				// Make country required
+				const countrySelect = field.querySelector('select[name="pays_residence"]');
+				if (countrySelect) countrySelect.setAttribute('required', 'required');
+			});
+			// Show engagement message
+			if (diasporaEngagement) diasporaEngagement.style.display = 'block';
 		}
 	});
 });
@@ -71,51 +117,9 @@ dishCheckboxes.forEach(checkbox => {
 	});
 });
 
-// Handle diaspora question logic
-const diasporaRadios = document.querySelectorAll('input[name="est_diaspora"]');
+// Set initial total questions
 const totalQSpan = document.getElementById('totalQ');
-
-diasporaRadios.forEach(radio => {
-	radio.addEventListener('change', function () {
-		isDiaspora = this.value === 'oui';
-
-		// Show/hide diaspora-specific fields
-		const diasporaOnlyFields = document.querySelectorAll('.diaspora-only');
-		const nonDiasporaFields = document.querySelectorAll('.non-diaspora-only');
-
-		if (isDiaspora) {
-			// Show diaspora fields
-			diasporaOnlyFields.forEach(field => {
-				field.style.display = 'block';
-				// Make required fields required
-				const requiredInputs = field.querySelectorAll(
-					'select[name="pays_residence"], input[name="freq_aide_alimentaire"], input[name="interet_diaspora"]'
-				);
-				requiredInputs.forEach(input => input.setAttribute('required', 'required'));
-			});
-			nonDiasporaFields.forEach(field => (field.style.display = 'none'));
-
-			// Update total sections to include diaspora sections
-			totalSections = 9;
-			if (totalQSpan) totalQSpan.textContent = '9';
-		} else {
-			// Hide diaspora fields
-			diasporaOnlyFields.forEach(field => {
-				field.style.display = 'none';
-				// Remove required attribute from hidden fields
-				const requiredInputs = field.querySelectorAll('[required]');
-				requiredInputs.forEach(input => input.removeAttribute('required'));
-			});
-			nonDiasporaFields.forEach(field => (field.style.display = 'block'));
-
-			// Update total sections to exclude pure diaspora section
-			totalSections = 9; // Still show section 8 to ask if diaspora, but section 9 will be minimal
-			if (totalQSpan) totalQSpan.textContent = '9';
-		}
-
-		updateProgress();
-	});
-});
+if (totalQSpan) totalQSpan.textContent = '10';
 
 // Progress bar update
 function updateProgress() {
@@ -181,24 +185,30 @@ function validateSection(sectionNumber) {
 		}
 	}
 
-	// Special validation for diaspora sections
-	if (sectionNumber === 8) {
-		// Section 8 always requires the diaspora question
-		const diasporaAnswer = document.querySelector('input[name="est_diaspora"]:checked');
-		if (!diasporaAnswer) {
+	// Special validation for Section 1 - location question
+	if (sectionNumber === 1) {
+		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+		if (!locationAnswer) {
 			isValid = false;
-			alert('Veuillez indiquer si vous êtes membre de la diaspora');
+			alert('Veuillez indiquer où vous vivez actuellement');
 		}
 	}
 
-	if (sectionNumber === 9 && isDiaspora) {
-		// Only validate diaspora fields if user is diaspora
-		const diasporaFields = section.querySelectorAll('.diaspora-only [required]');
-		diasporaFields.forEach(field => {
-			if (!field.value || field.value.trim() === '') {
+	// Special validation for Section 8 - zones
+	if (sectionNumber === 8) {
+		const localZones = section.querySelectorAll('input[name="zones_livraison"]:checked');
+		const diasporaZones = section.querySelectorAll('input[name="zones_famille"]:checked');
+		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+		
+		if (locationAnswer) {
+			if (locationAnswer.value === 'senegal' && localZones.length === 0) {
 				isValid = false;
+				alert('Veuillez sélectionner au moins une zone de livraison');
+			} else if (locationAnswer.value === 'etranger' && diasporaZones.length === 0) {
+				isValid = false;
+				alert('Veuillez indiquer où habite votre famille');
 			}
-		});
+		}
 	}
 
 	return isValid;
@@ -553,6 +563,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 	
 	// Update participant count (fetch from Google Sheets or use cached value)
 	updateParticipantCount();
+	
+	// Initialize field visibility based on location selection if already made
+	const selectedLocation = document.querySelector('input[name="localisation"]:checked');
+	if (selectedLocation) {
+		selectedLocation.dispatchEvent(new Event('change'));
+	}
 });
 
 // Function to update participant count
