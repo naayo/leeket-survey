@@ -697,10 +697,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Combien de personnes vivent dans votre foyer? <span class="required">*</span></label>
+                        <label>
+                            <span class="local-only" style="display: inline;">Combien de personnes vivent dans votre foyer?</span>
+                            <span class="diaspora-only" style="display: none;">Combien de personnes vivent dans le foyer familial au Sénégal?</span>
+                            <span class="required">*</span>
+                        </label>
                         <select name="foyer_size" required>
                             <option value="">Sélectionnez</option>
-                            <option value="1">Je vis seul(e)</option>
+                            <option value="1">1 personne</option>
                             <option value="2">2 personnes</option>
                             <option value="3-4">3-4 personnes</option>
                             <option value="5-6">5-6 personnes</option>

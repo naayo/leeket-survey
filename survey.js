@@ -49,7 +49,12 @@ localisationRadios.forEach(radio => {
 		if (isLocal) {
 			// Show local fields
 			localOnlyFields.forEach(field => {
-				field.style.display = 'block';
+				// Handle both block and inline display
+				if (field.tagName === 'SPAN') {
+					field.style.display = 'inline';
+				} else {
+					field.style.display = 'block';
+				}
 				const select = field.querySelector('select[name="quartier"]');
 				if (select) select.setAttribute('required', 'required');
 			});
@@ -69,7 +74,12 @@ localisationRadios.forEach(radio => {
 			});
 			// Show diaspora fields
 			diasporaOnlyFields.forEach(field => {
-				field.style.display = 'block';
+				// Handle both block and inline display
+				if (field.tagName === 'SPAN') {
+					field.style.display = 'inline';
+				} else {
+					field.style.display = 'block';
+				}
 				// Make region required
 				const regionRadios = field.querySelectorAll('input[name="diaspora_region"]');
 				if (regionRadios.length > 0) {
