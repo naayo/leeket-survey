@@ -46,6 +46,30 @@ localisationRadios.forEach(radio => {
 		const diasporaOnlyFields = document.querySelectorAll('.diaspora-only');
 		const diasporaEngagement = document.querySelector('.diaspora-engagement');
 		
+		// For diaspora users, remove required from sections 2-7 that will be skipped
+		if (isDiaspora) {
+			for (let i = 2; i <= 7; i++) {
+				const section = document.querySelector(`[data-section="${i}"]`);
+				if (section) {
+					section.querySelectorAll('[required]').forEach(input => {
+						input.setAttribute('data-was-required', 'true');
+						input.removeAttribute('required');
+					});
+				}
+			}
+		} else {
+			// Restore required for sections 2-7 for local users
+			for (let i = 2; i <= 7; i++) {
+				const section = document.querySelector(`[data-section="${i}"]`);
+				if (section) {
+					section.querySelectorAll('[data-was-required]').forEach(input => {
+						input.setAttribute('required', '');
+						input.removeAttribute('data-was-required');
+					});
+				}
+			}
+		}
+		
 		if (isLocal) {
 			// Show local fields
 			localOnlyFields.forEach(field => {
@@ -62,15 +86,21 @@ localisationRadios.forEach(radio => {
 			diasporaOnlyFields.forEach(field => {
 				field.style.display = 'none';
 				const inputs = field.querySelectorAll('[required]');
-				inputs.forEach(input => input.removeAttribute('required'));
+				inputs.forEach(input => {
+					input.setAttribute('data-was-required', 'true');
+					input.removeAttribute('required');
+				});
 			});
 			if (diasporaEngagement) diasporaEngagement.style.display = 'none';
 		} else if (isDiaspora) {
 			// Hide local fields
 			localOnlyFields.forEach(field => {
 				field.style.display = 'none';
-				const select = field.querySelector('select[name="quartier"]');
-				if (select) select.removeAttribute('required');
+				const inputs = field.querySelectorAll('[required]');
+				inputs.forEach(input => {
+					input.setAttribute('data-was-required', 'true');
+					input.removeAttribute('required');
+				});
 			});
 			// Show diaspora fields
 			diasporaOnlyFields.forEach(field => {
@@ -80,6 +110,11 @@ localisationRadios.forEach(radio => {
 				} else {
 					field.style.display = 'block';
 				}
+				// Restore required for diaspora fields
+				field.querySelectorAll('[data-was-required]').forEach(input => {
+					input.setAttribute('required', '');
+					input.removeAttribute('data-was-required');
+				});
 				// Make region required
 				const regionRadios = field.querySelectorAll('input[name="diaspora_region"]');
 				if (regionRadios.length > 0) {
@@ -186,6 +221,19 @@ function showSection(sectionNumber) {
 				} else {
 					field.style.display = isLocal ? 'block' : 'none';
 				}
+				// Manage required attribute for inputs inside local-only containers
+				field.querySelectorAll('input, select, textarea').forEach(input => {
+					if (isLocal) {
+						if (input.hasAttribute('data-was-required')) {
+							input.setAttribute('required', '');
+						}
+					} else {
+						if (input.hasAttribute('required')) {
+							input.setAttribute('data-was-required', 'true');
+							input.removeAttribute('required');
+						}
+					}
+				});
 			});
 			
 			targetSection.querySelectorAll('.diaspora-only').forEach(field => {
@@ -194,6 +242,19 @@ function showSection(sectionNumber) {
 				} else {
 					field.style.display = isDiaspora ? 'block' : 'none';
 				}
+				// Manage required attribute for inputs inside diaspora-only containers
+				field.querySelectorAll('input, select, textarea').forEach(input => {
+					if (isDiaspora) {
+						if (input.hasAttribute('data-was-required')) {
+							input.setAttribute('required', '');
+						}
+					} else {
+						if (input.hasAttribute('required')) {
+							input.setAttribute('data-was-required', 'true');
+							input.removeAttribute('required');
+						}
+					}
+				});
 			});
 		}
 	}
