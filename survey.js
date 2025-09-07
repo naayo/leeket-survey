@@ -1031,39 +1031,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 // Function to update participant count - NOW USES REAL GOOGLE SHEETS DATA
 async function updateParticipantCount() {
+	console.log('📊 updateParticipantCount called');
+	
 	try {
-		// ALWAYS clear cache if it contains old simulated values
-		const cachedValue = localStorage.getItem('leeket_participant_count');
-		if (cachedValue) {
-			const numValue = parseInt(cachedValue);
-			// Clear if it's 250 or > 100 (old simulated values)
-			if (numValue === 250 || numValue > 100) {
-				console.log('🧹 Clearing old/fake cached value:', cachedValue);
-				localStorage.removeItem('leeket_participant_count');
-				localStorage.removeItem('leeket_count_time');
-			}
-		}
+		// ALWAYS clear ANY cache to force fresh fetch
+		localStorage.removeItem('leeket_participant_count');
+		localStorage.removeItem('leeket_count_time');
+		console.log('🧹 Cache cleared - forcing fresh API call');
 		
-		// Try to get count from localStorage first (cache for 5 minutes only)
-		const cached = localStorage.getItem('leeket_participant_count');
-		const cacheTime = localStorage.getItem('leeket_count_time');
+		// SKIP CACHE COMPLETELY - Always fetch fresh
 		const now = new Date().getTime();
-		
-		// Only use cache if it's recent AND realistic
-		if (cached && cacheTime && (now - parseInt(cacheTime) < 300000)) { // 5 min cache only
-			const count = parseInt(cached);
-			// Only use if value is realistic (under 100 for now)
-			if (count < 100) {
-				document.getElementById('participantCount').textContent = count;
-				console.log('Using cached participant count:', count);
-				// Fade in the banner
-				const banner = document.getElementById('participantBanner');
-				if (banner) {
-					banner.style.opacity = '1';
-				}
-				return;
-			}
-		}
+		console.log('🚫 Skipping cache - fetching fresh data');
 		
 		// Try to fetch REAL count from Google Sheets
 		console.log('Fetching real participant count from Google Sheets...');
@@ -1079,21 +1057,32 @@ async function updateParticipantCount() {
 			console.log('API Response data:', data);
 			
 			// Check multiple possible field names for the count
-			let realCount = 0;
-			if (data.success && data.totalResponses !== undefined) {
+			let realCount = null;
+			
+			// First check for success response
+			if (data.success === true && data.totalResponses !== undefined) {
 				realCount = parseInt(data.totalResponses) || 0;
-			} else if (data.participants !== undefined) {
+				console.log('✅ Found totalResponses:', realCount);
+			} 
+			// Check for error response with participants
+			else if (data.status === 'error' && data.participants !== undefined) {
+				console.log('⚠️ API returned error with participants:', data.participants);
+				console.log('⚠️ Error message:', data.message);
+				// DON'T use the error fallback value
+				realCount = null; // Force to use our fallback
+			}
+			// Check for other valid response
+			else if (data.participants !== undefined && data.status !== 'error') {
 				realCount = parseInt(data.participants) || 0;
+				console.log('✅ Found participants:', realCount);
 			} else if (data.count !== undefined) {
 				realCount = parseInt(data.count) || 0;
-			} else if (!isNaN(parseInt(data))) {
-				// If the response is just a number
-				realCount = parseInt(data);
+				console.log('✅ Found count:', realCount);
 			}
 			
-			if (realCount > 0 || (data.success && realCount === 0)) {
+			if (realCount !== null && (realCount >= 0 && data.status !== 'error')) {
 				// We got a valid response from the API
-				console.log('✅ Real participant count from Google Sheets:', realCount);
+				console.log('✅ Using real participant count from Google Sheets:', realCount);
 				
 				// Show the real count (even if it's 0)
 				const displayCount = realCount === 0 ? 0 : realCount;
