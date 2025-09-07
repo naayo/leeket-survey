@@ -1032,9 +1032,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 // Function to update participant count - NOW USES REAL GOOGLE SHEETS DATA
 async function updateParticipantCount() {
 	try {
-		// Clear old cache if it exists (for testing)
-		const forceRefresh = false; // Set to true to force refresh
-		if (forceRefresh) {
+		// FORCE CLEAR OLD CACHE - Remove old simulated values
+		const cachedValue = localStorage.getItem('leeket_participant_count');
+		if (cachedValue && parseInt(cachedValue) > 100) {
+			// Clear unrealistic cached values
+			console.log('🧹 Clearing unrealistic cached value:', cachedValue);
 			localStorage.removeItem('leeket_participant_count');
 			localStorage.removeItem('leeket_count_time');
 		}
@@ -1129,3 +1131,53 @@ async function updateParticipantCount() {
 function clearDraft() {
 	localStorage.removeItem('leeket_survey_draft');
 }
+
+// Debug function - Can be called from console
+window.debugParticipantCount = async function() {
+	console.log('=== DEBUGGING PARTICIPANT COUNT ===');
+	
+	// Clear all cache
+	localStorage.removeItem('leeket_participant_count');
+	localStorage.removeItem('leeket_count_time');
+	console.log('✅ Cache cleared');
+	
+	// Try to fetch from API
+	try {
+		const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats');
+		console.log('📡 API Response:', response);
+		const text = await response.text();
+		console.log('📄 Raw response:', text);
+		
+		try {
+			const data = JSON.parse(text);
+			console.log('📊 Parsed data:', data);
+			
+			if (data.totalResponses !== undefined) {
+				console.log('✅ Found totalResponses:', data.totalResponses);
+			} else if (data.participants !== undefined) {
+				console.log('✅ Found participants:', data.participants);
+			} else {
+				console.log('❌ No count field found in response');
+			}
+		} catch (e) {
+			console.log('❌ Could not parse as JSON:', e);
+		}
+	} catch (error) {
+		console.log('❌ Fetch failed:', error);
+	}
+	
+	// Now update the count
+	await updateParticipantCount();
+	console.log('=== END DEBUG ===');
+};
+
+// Auto-fix on load if value is wrong
+window.addEventListener('load', () => {
+	setTimeout(() => {
+		const currentValue = document.getElementById('participantCount').textContent;
+		if (parseInt(currentValue) > 100) {
+			console.log('🔧 Auto-fixing unrealistic count:', currentValue);
+			window.debugParticipantCount();
+		}
+	}, 100);
+});
