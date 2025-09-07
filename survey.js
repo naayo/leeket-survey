@@ -1041,17 +1041,20 @@ async function updateParticipantCount() {
 			localStorage.removeItem('leeket_count_time');
 		}
 		
-		// Try to get count from localStorage first (cache for 30 minutes)
+		// Try to get count from localStorage first (cache for 5 minutes only)
 		const cached = localStorage.getItem('leeket_participant_count');
 		const cacheTime = localStorage.getItem('leeket_count_time');
 		const now = new Date().getTime();
 		
-		if (cached && cacheTime && (now - parseInt(cacheTime) < 1800000)) { // 30 min cache
-			// Use cached value if less than 30 minutes old
+		// Only use cache if it's recent AND realistic
+		if (cached && cacheTime && (now - parseInt(cacheTime) < 300000)) { // 5 min cache only
 			const count = parseInt(cached);
-			document.getElementById('participantCount').textContent = count;
-			console.log('Using cached participant count:', count);
-			return;
+			// Only use if value is realistic (under 100 for now)
+			if (count < 100) {
+				document.getElementById('participantCount').textContent = count;
+				console.log('Using cached participant count:', count);
+				return;
+			}
 		}
 		
 		// Try to fetch REAL count from Google Sheets
