@@ -11,6 +11,7 @@ const btnSubmit = document.getElementById('btnSubmit');
 const successMessage = document.getElementById('successMessage');
 const errorMessage = document.getElementById('errorMessage');
 const loading = document.getElementById('loading');
+const loadingOverlay = document.getElementById('loadingOverlay');
 
 let currentSection = 1;
 let totalSections = 10; // Now 10 sections total
@@ -500,6 +501,9 @@ form.addEventListener('submit', async function (e) {
 
 	// Show loading state
 	loading.style.display = 'block';
+	if (loadingOverlay) {
+		loadingOverlay.classList.add('active');
+	}
 	errorMessage.style.display = 'none';
 
 	// Collect form data
@@ -737,6 +741,9 @@ form.addEventListener('submit', async function (e) {
 		if (result.isDuplicate) {
 			// Hide loading
 			loading.style.display = 'none';
+			if (loadingOverlay) {
+				loadingOverlay.classList.remove('active');
+			}
 			
 			// Show duplicate message
 			errorMessage.style.display = 'block';
@@ -770,6 +777,9 @@ form.addEventListener('submit', async function (e) {
 		form.style.display = 'none';
 		document.querySelector('.progress-container').style.display = 'none';
 		loading.style.display = 'none';
+		if (loadingOverlay) {
+			loadingOverlay.classList.remove('active');
+		}
 		successMessage.style.display = 'block';
 		
 		// Display the promo code
@@ -796,6 +806,9 @@ form.addEventListener('submit', async function (e) {
 
 		// Show error message
 		loading.style.display = 'none';
+		if (loadingOverlay) {
+			loadingOverlay.classList.remove('active');
+		}
 		errorMessage.style.display = 'block';
 		errorMessage.textContent = `Erreur: ${error.message}. Veuillez réessayer ou nous contacter directement.`;
 
