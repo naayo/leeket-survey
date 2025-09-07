@@ -1106,18 +1106,11 @@ async function updateParticipantCount() {
 			console.log('❌ Could not fetch from Google Sheets:', fetchError.message);
 		}
 		
-		// FALLBACK: Use realistic number if Google Sheets fails
+		// FALLBACK: Use FIXED realistic number if Google Sheets fails
 		console.log('📊 Using fallback count (API failed or returned invalid data)');
 		
-		// Use a realistic fallback based on current date
-		const today = new Date();
-		const dayOfMonth = today.getDate();
-		const month = today.getMonth();
-		
-		// Generate a consistent but realistic number (3-15 for testing phase)
-		const baseCount = 3;
-		const variableCount = (dayOfMonth % 10) + (month % 3);
-		const finalCount = baseCount + variableCount;
+		// Use a FIXED fallback value (not calculated)
+		const finalCount = 4; // Fixed to 4 - your actual count
 		
 		console.log('Using simulated count:', finalCount);
 		document.getElementById('participantCount').textContent = finalCount;
@@ -1128,9 +1121,8 @@ async function updateParticipantCount() {
 			banner.style.opacity = '1';
 		}
 		
-		// Cache the simulated value
-		localStorage.setItem('leeket_participant_count', finalCount);
-		localStorage.setItem('leeket_count_time', now.toString());
+		// DON'T cache the fallback value - we want to retry API next time
+		console.log('❌ NOT caching fallback value to force retry next time');
 		
 	} catch (error) {
 		console.log('Could not update participant count:', error);
