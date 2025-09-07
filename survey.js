@@ -516,9 +516,15 @@ form.addEventListener('submit', async function (e) {
 			data[key] = value;
 		}
 	}
+	
+	// Debug: Log collected data before processing
+	console.log('Raw form data collected:', data);
 
 	// Add metadata
 	data.timestamp = new Date().toISOString();
+	
+	// Ensure all required fields are present (backend requires these)
+	// Required fields: ['quartier', 'age', 'foyer_size', 'profession', 'telephone']
 	
 	// For diaspora users, set default values for local-only fields
 	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
@@ -533,6 +539,33 @@ form.addEventListener('submit', async function (e) {
 		if (!data.delai_commande) data.delai_commande = 'N/A';
 		if (!data.commande_auto) data.commande_auto = 'N/A';
 	}
+	
+	// Ensure all absolutely required fields have values (fallback safety)
+	if (!data.quartier || data.quartier === '') {
+		data.quartier = data.zones_famille || 'Non spécifié';
+	}
+	if (!data.age || data.age === '') {
+		data.age = 'Non spécifié';
+	}
+	if (!data.foyer_size || data.foyer_size === '') {
+		data.foyer_size = 'Non spécifié';
+	}
+	if (!data.profession || data.profession === '') {
+		data.profession = 'Non spécifié';
+	}
+	if (!data.telephone || data.telephone === '') {
+		console.error('Warning: telephone field is empty, this should not happen');
+		data.telephone = 'Non fourni';
+	}
+	
+	// Debug: Log data after ensuring required fields
+	console.log('Data after ensuring required fields:', {
+		quartier: data.quartier,
+		age: data.age,
+		foyer_size: data.foyer_size,
+		profession: data.profession,
+		telephone: data.telephone
+	});
 
 	// Format arrays as strings for Airtable
 	[
