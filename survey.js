@@ -519,6 +519,20 @@ form.addEventListener('submit', async function (e) {
 
 	// Add metadata
 	data.timestamp = new Date().toISOString();
+	
+	// For diaspora users, set default values for local-only fields
+	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+	if (locationAnswer && locationAnswer.value === 'etranger') {
+		// Set default values for fields that diaspora users don't fill
+		if (!data.quartier) data.quartier = 'Diaspora';
+		if (!data.lieu_courses) data.lieu_courses = 'N/A';
+		if (!data.frequence_courses) data.frequence_courses = 'N/A';
+		if (!data.budget_hebdo) data.budget_hebdo = 'N/A';
+		if (!data.defis) data.defis = 'N/A';
+		if (!data.plats) data.plats = 'N/A';
+		if (!data.delai_commande) data.delai_commande = 'N/A';
+		if (!data.commande_auto) data.commande_auto = 'N/A';
+	}
 
 	// Format arrays as strings for Airtable
 	[
@@ -530,6 +544,10 @@ form.addEventListener('submit', async function (e) {
 		'inquietudes',
 		'methode_aide_actuelle',
 		'fonctionnalites_diaspora',
+		'zones_livraison',
+		'zones_famille',
+		'produits_preferes_diaspora',
+		'difficultes_diaspora',
 	].forEach(field => {
 		if (data[field] && Array.isArray(data[field])) {
 			data[field] = data[field].join(', ');
