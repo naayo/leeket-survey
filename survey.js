@@ -572,6 +572,19 @@ form.addEventListener('submit', async function (e) {
 				// Missing first digit, add default 7
 				data.telephone = '7' + cleanPhone;
 				console.log('Senegalese phone number adjusted:', data.telephone);
+			} else if (cleanPhone.startsWith('06') && cleanPhone.length === 10) {
+				// French mobile number starting with 06, add +33 and remove leading 0
+				data.telephone = '+33' + cleanPhone.substring(1);
+				console.log('French phone number formatted:', data.telephone);
+			} else if (cleanPhone.startsWith('07') && cleanPhone.length === 10) {
+				// French mobile number starting with 07, add +33 and remove leading 0
+				data.telephone = '+33' + cleanPhone.substring(1);
+				console.log('French phone number formatted:', data.telephone);
+			} else if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
+				// Likely a national number from some country, try common patterns
+				// Belgian (04xx), Swiss (07x), etc. For now, keep with warning
+				data.telephone = '+' + cleanPhone;
+				console.log('National phone number (country unknown):', data.telephone);
 			} else if (cleanPhone.length >= 10) {
 				// Likely an international number, add + prefix if not present
 				data.telephone = '+' + cleanPhone;

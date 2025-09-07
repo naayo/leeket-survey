@@ -189,11 +189,12 @@ exports.handler = async (event, context) => {
         // Validate required fields
         validateData(data);
         
-        // Check for Airtable credentials
+        // Check for Airtable credentials (optional - will use Google Sheets if not configured)
         const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME } = process.env;
         
         if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
-            throw new Error('Configuration Airtable manquante');
+            // Return error to trigger Google Sheets fallback
+            throw new Error('Using Google Sheets (Airtable not configured)');
         }
         
         const tableName = AIRTABLE_TABLE_NAME || 'Responses';
