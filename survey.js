@@ -519,6 +519,25 @@ form.addEventListener('submit', async function (e) {
 	
 	// Debug: Log collected data before processing
 	console.log('Raw form data collected:', data);
+	
+	// Check specifically for telephone field
+	const telInput = document.querySelector('input[name="telephone"]');
+	if (telInput) {
+		console.log('Telephone input found:', {
+			value: telInput.value,
+			required: telInput.hasAttribute('required'),
+			disabled: telInput.disabled,
+			type: telInput.type,
+			pattern: telInput.pattern
+		});
+		// Force add telephone if missing
+		if (!data.telephone && telInput.value) {
+			data.telephone = telInput.value;
+			console.log('Manually added telephone:', telInput.value);
+		}
+	} else {
+		console.error('Telephone input field not found in DOM!');
+	}
 
 	// Add metadata
 	data.timestamp = new Date().toISOString();
