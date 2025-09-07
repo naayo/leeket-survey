@@ -1032,13 +1032,16 @@ window.addEventListener('DOMContentLoaded', async () => {
 // Function to update participant count - NOW USES REAL GOOGLE SHEETS DATA
 async function updateParticipantCount() {
 	try {
-		// FORCE CLEAR OLD CACHE - Remove old simulated values
+		// ALWAYS clear cache if it contains old simulated values
 		const cachedValue = localStorage.getItem('leeket_participant_count');
-		if (cachedValue && parseInt(cachedValue) > 100) {
-			// Clear unrealistic cached values
-			console.log('🧹 Clearing unrealistic cached value:', cachedValue);
-			localStorage.removeItem('leeket_participant_count');
-			localStorage.removeItem('leeket_count_time');
+		if (cachedValue) {
+			const numValue = parseInt(cachedValue);
+			// Clear if it's 250 or > 100 (old simulated values)
+			if (numValue === 250 || numValue > 100) {
+				console.log('🧹 Clearing old/fake cached value:', cachedValue);
+				localStorage.removeItem('leeket_participant_count');
+				localStorage.removeItem('leeket_count_time');
+			}
 		}
 		
 		// Try to get count from localStorage first (cache for 5 minutes only)

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Google Sheets</title>
+</head>
+<body>
+    <h1>Test Direct de l'API</h1>
+    <button onclick="testAPI()">Tester l'API</button>
+    <pre id="result"></pre>
+    
+    <script>
+    async function testAPI() {
+        const url = 'https://script.google.com/macros/s/AKfycbzA4VOEmB5snYnP0sYFBAPWflPyMW8b_AG_vhd1H3osEiKe31iSrr3VMgDr1KZmoNNh/exec?action=getStats';
+        
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById('result').textContent = 'Réponse brute:\n' + text;
+            
+            try {
+                const json = JSON.parse(text);
+                document.getElementById('result').textContent += '\n\nJSON parsé:\n' + JSON.stringify(json, null, 2);
+                
+                if (json.participants === 250) {
+                    document.getElementById('result').textContent += '\n\n⚠️ PROBLÈME: L\'API retourne encore 250!\nVous devez mettre à jour votre Google Apps Script!';
+                }
+            } catch(e) {
+                document.getElementById('result').textContent += '\n\nErreur parsing JSON: ' + e;
+            }
+        } catch(error) {
+            document.getElementById('result').textContent = 'Erreur: ' + error;
+        }
+    }
+    
+    // Auto-test au chargement
+    window.onload = testAPI;
+    </script>
+</body>
+</html>
