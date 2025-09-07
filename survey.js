@@ -1053,6 +1053,11 @@ async function updateParticipantCount() {
 			if (count < 100) {
 				document.getElementById('participantCount').textContent = count;
 				console.log('Using cached participant count:', count);
+				// Fade in the banner
+				const banner = document.getElementById('participantBanner');
+				if (banner) {
+					banner.style.opacity = '1';
+				}
 				return;
 			}
 		}
@@ -1092,6 +1097,12 @@ async function updateParticipantCount() {
 				
 				document.getElementById('participantCount').textContent = displayCount;
 				
+				// Fade in the banner
+				const banner = document.getElementById('participantBanner');
+				if (banner) {
+					banner.style.opacity = '1';
+				}
+				
 				// Cache the real value
 				localStorage.setItem('leeket_participant_count', displayCount);
 				localStorage.setItem('leeket_count_time', now.toString());
@@ -1118,6 +1129,12 @@ async function updateParticipantCount() {
 		
 		console.log('Using simulated count:', finalCount);
 		document.getElementById('participantCount').textContent = finalCount;
+		
+		// Fade in the banner
+		const banner = document.getElementById('participantBanner');
+		if (banner) {
+			banner.style.opacity = '1';
+		}
 		
 		// Cache the simulated value
 		localStorage.setItem('leeket_participant_count', finalCount);

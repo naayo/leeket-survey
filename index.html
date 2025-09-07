@@ -583,6 +583,11 @@
             50% { opacity: 1; }
         }
 
+        .loading-dots-inline {
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
         .success-message h2 {
             font-family: 'Poppins', sans-serif;
             color: var(--gray-900);
@@ -770,8 +775,10 @@
             <p class="subtitle">Avec vous, on construit le marché digital qui nous facilite le quotidien,<br>
             rapproche les familles et simplifie nos courses.</p>
             <div class="incentive">🎁 Prenez 5 minutes = recevez 2000 FCFA de cadeau pour vos premières courses</div>
-            <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px; margin-top: 15px; display: inline-block;">
-                <span style="font-size: 14px;">🔔 Déjà <strong id="participantCount">...</strong> personnes ont participé – rejoignez-les !</span>
+            <div id="participantBanner" style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px; margin-top: 15px; display: inline-block; opacity: 0; transition: opacity 0.5s ease;">
+                <span style="font-size: 14px;">🔔 Déjà <strong id="participantCount">
+                    <span class="loading-dots-inline">...</span>
+                </strong> personnes ont participé – rejoignez-les !</span>
             </div>
         </div>
 
