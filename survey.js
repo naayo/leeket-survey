@@ -585,11 +585,21 @@ form.addEventListener('submit', async function (e) {
 				data.telephone = '+33' + cleanPhone.substring(1);
 				console.log('French phone number formatted:', data.telephone);
 			} else if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
-				// Likely a national number from some country, try common patterns
-				// Belgian (04xx), Swiss (07x), etc. For now, keep with warning
-				data.telephone = '+' + cleanPhone;
-				console.log('National phone number (country unknown):', data.telephone);
-			} else if (cleanPhone.length >= 10) {
+				// Other national formats - try to detect country
+				if (cleanPhone.startsWith('04') || cleanPhone.startsWith('047')) {
+					// Belgian mobile
+					data.telephone = '+32' + cleanPhone.substring(1);
+					console.log('Belgian phone number formatted:', data.telephone);
+				} else if (cleanPhone.startsWith('05') && cleanPhone[2] === '4') {
+					// Canadian mobile (514, 524, etc.)
+					data.telephone = '+1' + cleanPhone.substring(1);
+					console.log('Canadian phone number formatted:', data.telephone);
+				} else {
+					// Generic national format, add + for international
+					data.telephone = '+' + cleanPhone;
+					console.log('National phone number (country unknown):', data.telephone);
+				}
+			} else if (cleanPhone.length >= 8) {
 				// Likely an international number, add + prefix if not present
 				data.telephone = '+' + cleanPhone;
 				console.log('International phone number formatted:', data.telephone);

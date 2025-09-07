@@ -87,11 +87,17 @@ function validateData(data) {
     
     // Check if it's a Senegalese number (9 digits starting with 7, 6, or 5)
     const senegalRegex = /^(77|78|76|70|75|33)[0-9]{7}$/;
-    // Check if it's an international number (starts with + and has 10-15 digits)
-    const internationalRegex = /^\+[0-9]{10,15}$/;
+    // Check if it's an international number (starts with + and has 7-15 digits total)
+    const internationalRegex = /^\+[0-9]{7,15}$/;
     
     if (!senegalRegex.test(cleanPhone) && !internationalRegex.test(cleanPhone)) {
-        throw new Error('Numéro de téléphone invalide. Format accepté: 77 XXX XX XX ou format international (+XXX...)');
+        console.error('Phone validation failed:', {
+            phone: data.telephone,
+            cleaned: cleanPhone,
+            senegalTest: senegalRegex.test(cleanPhone),
+            internationalTest: internationalRegex.test(cleanPhone)
+        });
+        throw new Error('Numéro de téléphone invalide. Formats acceptés: Sénégal (77 XXX XX XX) ou International (+33 6XX XXX XXX, +1 XXX XXX XXXX, etc.)');
     }
     
     return true;
