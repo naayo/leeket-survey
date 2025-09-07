@@ -620,7 +620,7 @@ function doGet(e) {
       .createTextOutput(JSON.stringify({
         status: 'error',
         message: error.toString(),
-        participants: 250 // Default fallback
+        participants: 0 // Return 0 on error instead of fake 250
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
