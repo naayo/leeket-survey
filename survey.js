@@ -555,23 +555,37 @@ form.addEventListener('submit', async function (e) {
 		
 		// Check if it starts with + (international format)
 		if (cleanPhone.startsWith('+')) {
-			// Keep the full international number as is
-			data.telephone = cleanPhone;
-			console.log('International phone number kept:', data.telephone);
+			// Special handling for Senegal numbers to ensure they're valid
+			if (cleanPhone.startsWith('+221')) {
+				// Senegalese number with country code - ensure it's properly formatted
+				const withoutCode = cleanPhone.substring(4);
+				if (withoutCode.length === 9 && ['7', '6', '5', '3'].includes(withoutCode[0])) {
+					data.telephone = cleanPhone;
+					console.log('Senegalese international number validated:', data.telephone);
+				} else {
+					// Keep as is but log warning
+					data.telephone = cleanPhone;
+					console.log('Warning: Senegalese number might be malformed:', data.telephone);
+				}
+			} else {
+				// Keep other international numbers as is
+				data.telephone = cleanPhone;
+				console.log('International phone number kept:', data.telephone);
+			}
 		} else {
 			// Remove leading zeros from international dialing
 			cleanPhone = cleanPhone.replace(/^00/, '');
 			
-			// Check if it's a Senegalese number
-			if (cleanPhone.startsWith('221') && cleanPhone.length > 9) {
-				// Remove Senegal country code
-				cleanPhone = cleanPhone.substring(3);
+			// Check if it's a Senegalese number with country code
+			if (cleanPhone.startsWith('221') && cleanPhone.length === 12) {
+				// Keep as international format with +
+				data.telephone = '+' + cleanPhone;
+				console.log('Senegalese international number formatted:', data.telephone);
 			}
-			
 			// Check if it looks like a Senegalese mobile number (9 digits starting with 7, 6, or 5)
-			if (cleanPhone.length === 9 && ['7', '6', '5'].includes(cleanPhone[0])) {
+			else if (cleanPhone.length === 9 && ['7', '6', '5'].includes(cleanPhone[0])) {
 				data.telephone = cleanPhone;
-				console.log('Senegalese phone number cleaned:', data.telephone);
+				console.log('Senegalese local number cleaned:', data.telephone);
 			} else if (cleanPhone.length === 8 && ['7', '6', '5'].includes(cleanPhone[0])) {
 				// Missing first digit, add default 7
 				data.telephone = '7' + cleanPhone;
