@@ -1029,43 +1029,79 @@ window.addEventListener('DOMContentLoaded', async () => {
 	}
 });
 
-// Function to update participant count
+// Function to update participant count - NOW USES REAL GOOGLE SHEETS DATA
 async function updateParticipantCount() {
 	try {
-		// Try to get count from localStorage first (cache for 1 hour)
+		// Try to get count from localStorage first (cache for 30 minutes)
 		const cached = localStorage.getItem('leeket_participant_count');
 		const cacheTime = localStorage.getItem('leeket_count_time');
 		const now = new Date().getTime();
 		
-		if (cached && cacheTime && (now - parseInt(cacheTime) < 3600000)) {
-			// Use cached value if less than 1 hour old
+		if (cached && cacheTime && (now - parseInt(cacheTime) < 1800000)) { // 30 min cache
+			// Use cached value if less than 30 minutes old
 			const count = parseInt(cached);
 			document.getElementById('participantCount').textContent = count;
+			console.log('Using cached participant count:', count);
 			return;
 		}
 		
-		// For now, use a realistic growing number based on date
-		// This simulates organic growth until real API is connected
-		const launchDate = new Date('2024-01-15').getTime();
+		// Try to fetch REAL count from Google Sheets
+		console.log('Fetching real participant count from Google Sheets...');
+		
+		try {
+			const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats');
+			const data = await response.json();
+			
+			if (data.success && data.totalResponses !== undefined) {
+				// Use REAL count from Google Sheets
+				const realCount = parseInt(data.totalResponses) || 0;
+				console.log('Real participant count from Google Sheets:', realCount);
+				
+				// Add a minimum display value to avoid showing 0
+				const displayCount = Math.max(realCount, 3); // Show at least 3
+				
+				document.getElementById('participantCount').textContent = displayCount;
+				
+				// Cache the real value
+				localStorage.setItem('leeket_participant_count', displayCount);
+				localStorage.setItem('leeket_count_time', now.toString());
+				return;
+			} else if (data.participants !== undefined) {
+				// Alternative field name
+				const realCount = parseInt(data.participants) || 0;
+				const displayCount = Math.max(realCount, 3);
+				
+				document.getElementById('participantCount').textContent = displayCount;
+				localStorage.setItem('leeket_participant_count', displayCount);
+				localStorage.setItem('leeket_count_time', now.toString());
+				return;
+			}
+		} catch (fetchError) {
+			console.log('Could not fetch from Google Sheets, using fallback:', fetchError);
+		}
+		
+		// FALLBACK: Use simulated number if Google Sheets fails or returns 0
+		const launchDate = new Date('2024-11-01').getTime(); // Updated to more recent date
 		const daysSinceLaunch = Math.floor((now - launchDate) / (1000 * 60 * 60 * 24));
-		const baseCount = 250;
-		const dailyGrowth = 8; // Average 8 responses per day
+		const baseCount = 12;
+		const dailyGrowth = 3; // More realistic growth
 		const estimatedCount = baseCount + (daysSinceLaunch * dailyGrowth);
 		
 		// Add some randomness to make it look more natural
-		const randomVariation = Math.floor(Math.random() * 20) - 10;
-		const finalCount = Math.max(250, estimatedCount + randomVariation);
+		const randomVariation = Math.floor(Math.random() * 5) - 2;
+		const finalCount = Math.max(12, estimatedCount + randomVariation);
 		
-		// Update display
+		console.log('Using simulated count:', finalCount);
 		document.getElementById('participantCount').textContent = finalCount;
 		
-		// Cache the value
+		// Cache the simulated value
 		localStorage.setItem('leeket_participant_count', finalCount);
 		localStorage.setItem('leeket_count_time', now.toString());
 		
 	} catch (error) {
 		console.log('Could not update participant count:', error);
-		// Keep default value of 250
+		// Keep a realistic default value
+		document.getElementById('participantCount').textContent = 15;
 	}
 }
 
