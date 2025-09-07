@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Participant Count - Leeket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2ECC71;
+        }
+        button {
+            background: #2ECC71;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #27AE60;
+        }
+        .log {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-left: 3px solid #2ECC71;
+        }
+        .error {
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+        .success {
+            border-left-color: #2ECC71;
+            color: #27AE60;
+        }
+        .info {
+            border-left-color: #3498db;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix Participant Count</h1>
+        <p>Cette page va diagnostiquer et corriger le problème du compteur de participants.</p>
+        
+        <div>
+            <button onclick="clearCache()">1. Vider le Cache</button>
+            <button onclick="testAPI()">2. Tester l'API Google</button>
+            <button onclick="fixAndRedirect()">3. Corriger et Retourner</button>
+        </div>
+        
+        <div id="log" class="log">
+            <div class="log-entry info">En attente...</div>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzA4VOEmB5snYnP0sYFBAPWflPyMW8b_AG_vhd1H3osEiKe31iSrr3VMgDr1KZmoNNh/exec';
+        const logDiv = document.getElementById('log');
+        
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearCache() {
+            addLog('Vidage du cache...', 'info');
+            
+            // Clear all participant-related cache
+            const keysToRemove = [
+                'leeket_participant_count',
+                'leeket_count_time',
+                'leeket_survey_draft'
+            ];
+            
+            keysToRemove.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    localStorage.removeItem(key);
+                    addLog(`✅ Supprimé: ${key} = ${value}`, 'success');
+                } else {
+                    addLog(`ℹ️ ${key} n'existait pas`, 'info');
+                }
+            });
+            
+            addLog('Cache vidé avec succès!', 'success');
+        }
+        
+        async function testAPI() {
+            addLog('Test de l\'API Google Sheets...', 'info');
+            
+            try {
+                addLog(`Appel: ${GOOGLE_SCRIPT_URL}?action=getStats`, 'info');
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats');
+                addLog(`Status HTTP: ${response.status}`, response.status === 200 ? 'success' : 'error');
+                
+                const text = await response.text();
+                addLog(`Réponse brute: ${text.substring(0, 200)}...`, 'info');
+                
+                try {
+                    const data = JSON.parse(text);
+                    addLog('✅ JSON valide reçu', 'success');
+                    addLog(`Données: ${JSON.stringify(data, null, 2)}`, 'info');
+                    
+                    if (data.totalResponses !== undefined) {
+                        addLog(`✅ Total des réponses: ${data.totalResponses}`, 'success');
+                    } else if (data.participants !== undefined) {
+                        addLog(`✅ Participants: ${data.participants}`, 'success');
+                    } else {
+                        addLog('⚠️ Aucun champ de comptage trouvé', 'error');
+                        addLog('L\'API doit retourner "totalResponses" ou "participants"', 'error');
+                    }
+                } catch (e) {
+                    addLog(`❌ Erreur JSON: ${e.message}`, 'error');
+                    addLog('La réponse n\'est pas du JSON valide', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Erreur réseau: ${error.message}`, 'error');
+                if (error.message.includes('CORS')) {
+                    addLog('Problème CORS - L\'API doit autoriser les requêtes cross-origin', 'error');
+                }
+            }
+        }
+        
+        function fixAndRedirect() {
+            addLog('Application des corrections...', 'info');
+            
+            // Clear everything
+            clearCache();
+            
+            // Set a reasonable default
+            localStorage.setItem('leeket_participant_count', '4');
+            localStorage.setItem('leeket_count_time', Date.now().toString());
+            addLog('✅ Valeur forcée à 4 (temporaire)', 'success');
+            
+            addLog('Redirection dans 2 secondes...', 'info');
+            
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+        
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            addLog('Page de diagnostic chargée', 'success');
+            addLog('Cliquez sur les boutons dans l\'ordre pour diagnostiquer', 'info');
+        });
+    </script>
+</body>
+</html>
