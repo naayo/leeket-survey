@@ -344,10 +344,12 @@ function validateSection(sectionNumber) {
 				if (!firstInvalidField) firstInvalidField = formGroup;
 			}
 		} else {
-			// Special handling for telephone field pattern validation
-			if (field.type === 'tel' && field.pattern) {
-				const pattern = new RegExp(field.pattern.replace(/\\\\/g, '\\'));
-				if (!pattern.test(field.value)) {
+			// Special handling for telephone field - validate more flexibly
+			if (field.type === 'tel') {
+				// Remove non-digits and check if it's a valid phone
+				const cleanPhone = field.value.replace(/\D/g, '');
+				// Accept 8-12 digits (to allow for country codes)
+				if (cleanPhone.length < 8 || cleanPhone.length > 15) {
 					isValid = false;
 					if (formGroup) {
 						formGroup.classList.add('invalid');
@@ -520,7 +522,7 @@ form.addEventListener('submit', async function (e) {
 	// Debug: Log collected data before processing
 	console.log('Raw form data collected:', data);
 	
-	// Check specifically for telephone field
+	// Check specifically for telephone field and clean it
 	const telInput = document.querySelector('input[name="telephone"]');
 	if (telInput) {
 		console.log('Telephone input found:', {
@@ -537,6 +539,51 @@ form.addEventListener('submit', async function (e) {
 		}
 	} else {
 		console.error('Telephone input field not found in DOM!');
+	}
+	
+	// Clean phone number - handle international formats
+	if (data.telephone) {
+		// Store original for logging
+		const originalPhone = data.telephone;
+		
+		// Remove all non-digit characters except + at the beginning
+		let cleanPhone = data.telephone.replace(/^\+/, 'PLUS').replace(/\D/g, '').replace(/^PLUS/, '+');
+		
+		// Check if it starts with + (international format)
+		if (cleanPhone.startsWith('+')) {
+			// Keep the full international number as is
+			data.telephone = cleanPhone;
+			console.log('International phone number kept:', data.telephone);
+		} else {
+			// Remove leading zeros from international dialing
+			cleanPhone = cleanPhone.replace(/^00/, '');
+			
+			// Check if it's a Senegalese number
+			if (cleanPhone.startsWith('221') && cleanPhone.length > 9) {
+				// Remove Senegal country code
+				cleanPhone = cleanPhone.substring(3);
+			}
+			
+			// Check if it looks like a Senegalese mobile number (9 digits starting with 7, 6, or 5)
+			if (cleanPhone.length === 9 && ['7', '6', '5'].includes(cleanPhone[0])) {
+				data.telephone = cleanPhone;
+				console.log('Senegalese phone number cleaned:', data.telephone);
+			} else if (cleanPhone.length === 8 && ['7', '6', '5'].includes(cleanPhone[0])) {
+				// Missing first digit, add default 7
+				data.telephone = '7' + cleanPhone;
+				console.log('Senegalese phone number adjusted:', data.telephone);
+			} else if (cleanPhone.length >= 10) {
+				// Likely an international number, add + prefix if not present
+				data.telephone = '+' + cleanPhone;
+				console.log('International phone number formatted:', data.telephone);
+			} else {
+				// Keep as is for other formats
+				data.telephone = cleanPhone;
+				console.log('Phone number kept as entered:', data.telephone);
+			}
+		}
+		
+		console.log(`Phone cleaning: "${originalPhone}" -> "${data.telephone}"`);
 	}
 
 	// Add metadata

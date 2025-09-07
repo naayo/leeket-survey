@@ -82,11 +82,16 @@ function validateData(data) {
         throw new Error(`Champs requis manquants: ${missingFields.join(', ')}`);
     }
     
-    // Validate phone number (Senegalese format)
-    const phoneRegex = /^(77|78|76|70|75)[0-9]{7}$/;
+    // Validate phone number (accept both Senegalese and international formats)
     const cleanPhone = data.telephone.replace(/\s/g, '');
-    if (!phoneRegex.test(cleanPhone)) {
-        throw new Error('Numéro de téléphone invalide. Format attendu: 77 XXX XX XX');
+    
+    // Check if it's a Senegalese number (9 digits starting with 7, 6, or 5)
+    const senegalRegex = /^(77|78|76|70|75|33)[0-9]{7}$/;
+    // Check if it's an international number (starts with + and has 10-15 digits)
+    const internationalRegex = /^\+[0-9]{10,15}$/;
+    
+    if (!senegalRegex.test(cleanPhone) && !internationalRegex.test(cleanPhone)) {
+        throw new Error('Numéro de téléphone invalide. Format accepté: 77 XXX XX XX ou format international (+XXX...)');
     }
     
     return true;
