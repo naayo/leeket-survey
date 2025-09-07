@@ -284,12 +284,26 @@ function validateSection(sectionNumber) {
 		group.classList.remove('invalid');
 	});
 
+	// Special handling for section 10 - check if user is diaspora or local
+	const locationAnswer = document.querySelector('input[name="localisation"]:checked');
+	const isDiaspora = locationAnswer && locationAnswer.value === 'etranger';
+	
 	requiredFields.forEach(field => {
 		const formGroup = field.closest('.form-group');
 		
 		// Skip validation for hidden fields (diaspora-only or local-only that are not visible)
 		const diasporaContainer = field.closest('.diaspora-only');
 		const localContainer = field.closest('.local-only');
+		
+		// For section 10, skip validation based on user type
+		if (sectionNumber === 10) {
+			if (isDiaspora && localContainer) {
+				return; // Skip local fields for diaspora users
+			}
+			if (!isDiaspora && diasporaContainer) {
+				return; // Skip diaspora fields for local users
+			}
+		}
 		
 		if (diasporaContainer && diasporaContainer.style.display === 'none') {
 			return; // Skip this field
@@ -399,30 +413,25 @@ function validateSection(sectionNumber) {
 		}
 	}
 	
-	// Special validation for Section 10 - different fields for diaspora vs local
+	// Special validation for Section 10 - recommendations
 	if (sectionNumber === 10) {
 		const locationAnswer = document.querySelector('input[name="localisation"]:checked');
 		if (locationAnswer) {
-			const isDiaspora = locationAnswer.value === 'etranger';
-			
-			// Only validate visible fields based on user type
-			if (isDiaspora) {
-				// Check diaspora-specific required fields
-				const produitsPref = section.querySelectorAll('input[name="produits_preferes_diaspora"]:checked');
-				if (produitsPref.length === 0) {
+			if (locationAnswer.value === 'senegal') {
+				const localRecommendation = section.querySelector('input[name="recommandation_locale"]:checked');
+				if (!localRecommendation) {
 					isValid = false;
-					const formGroup = section.querySelector('input[name="produits_preferes_diaspora"]')?.closest('.form-group');
+					const formGroup = section.querySelector('.local-only input[name="recommandation_locale"]')?.closest('.form-group');
 					if (formGroup) {
 						formGroup.classList.add('invalid');
 						if (!firstInvalidField) firstInvalidField = formGroup;
 					}
 				}
-			} else {
-				// Check local-specific required fields
-				const produitsPref = section.querySelectorAll('input[name="produits_preferes"]:checked');
-				if (produitsPref.length === 0) {
+			} else if (locationAnswer.value === 'etranger') {
+				const diasporaRecommendation = section.querySelector('input[name="recommandation_diaspora"]:checked');
+				if (!diasporaRecommendation) {
 					isValid = false;
-					const formGroup = section.querySelector('input[name="produits_preferes"]')?.closest('.form-group');
+					const formGroup = section.querySelector('.diaspora-only input[name="recommandation_diaspora"]')?.closest('.form-group');
 					if (formGroup) {
 						formGroup.classList.add('invalid');
 						if (!firstInvalidField) firstInvalidField = formGroup;
