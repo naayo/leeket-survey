@@ -587,7 +587,7 @@
                 <p>Envoi en cours...</p>
             </div>
 
-            <form id="surveyForm">
+            <form id="surveyForm" novalidate>
                 <!-- Section 1: Profil -->
                 <div class="section active" data-section="1">
                     <h2 class="section-title">
@@ -1322,7 +1322,7 @@
 
                     <div class="form-group">
                         <label>Pour recevoir votre code promo de 2000 FCFA: <span class="required">*</span></label>
-                        <input type="tel" name="telephone" placeholder="77 123 45 67" required pattern="[0-9]{2}[\s]?[0-9]{3}[\s]?[0-9]{2}[\s]?[0-9]{2}">
+                        <input type="tel" name="telephone" placeholder="77 123 45 67" required pattern="[0-9]{2}[\\s]?[0-9]{3}[\\s]?[0-9]{2}[\\s]?[0-9]{2}">
                         <span class="error">Numéro de téléphone requis</span>
                     </div>
 

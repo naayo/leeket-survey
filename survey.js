@@ -330,7 +330,21 @@ function validateSection(sectionNumber) {
 				if (!firstInvalidField) firstInvalidField = formGroup;
 			}
 		} else {
-			if (formGroup) formGroup.classList.remove('invalid');
+			// Special handling for telephone field pattern validation
+			if (field.type === 'tel' && field.pattern) {
+				const pattern = new RegExp(field.pattern.replace(/\\\\/g, '\\'));
+				if (!pattern.test(field.value)) {
+					isValid = false;
+					if (formGroup) {
+						formGroup.classList.add('invalid');
+						if (!firstInvalidField) firstInvalidField = formGroup;
+					}
+				} else {
+					if (formGroup) formGroup.classList.remove('invalid');
+				}
+			} else {
+				if (formGroup) formGroup.classList.remove('invalid');
+			}
 		}
 	});
 
