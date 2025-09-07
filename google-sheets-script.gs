@@ -42,6 +42,14 @@ function initializeSpreadsheet() {
     'Segment',
     'Status',
     
+    // PROMO CODE FIELDS (NEW)
+    'Promo Code',
+    'Code Status',
+    'Code Value (FCFA)',
+    'Code Expiry',
+    'Code Used',
+    'Code Used Date',
+    
     // Section 1: Profil avec détection précoce
     'Localisation', // senegal/etranger
     'Quartier', // LOCAL: quartier de résidence
@@ -98,6 +106,9 @@ function initializeSpreadsheet() {
     'Fonctionnalites Essentielles', // DIASPORA: fonctionnalités importantes
     'Types Produits', // DIASPORA: types de produits souhaités
     'Preference Commande', // DIASPORA: comment organiser commandes
+    'Frais Service Diaspora', // DIASPORA: willingness to pay service fee
+    'Freq Utilisation Diaspora', // DIASPORA: usage frequency
+    'Nombre Beneficiaires', // DIASPORA: number of households to help
     
     // Section 10: Suggestions finales
     'Services Manquants', // DIASPORA: services manquants
@@ -297,9 +308,16 @@ function getSegment(score) {
 }
 
 /**
- * Generate promo code
+ * Generate promo code - Now uses the code sent from frontend
+ * Frontend generates: LK + last 4 phone digits + 4 random chars
  */
-function generatePromoCode() {
+function generatePromoCode(data) {
+  // Use the promo code sent from frontend if available
+  if (data.promo_code) {
+    return data.promo_code;
+  }
+  
+  // Fallback: generate a new one if not provided
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let code = 'LEEKET';
   for (let i = 0; i < 6; i++) {
@@ -396,9 +414,14 @@ function doPost(e) {
     // Calculate lead score and segment
     const leadScore = calculateLeadScore(data);
     const segment = getSegment(leadScore);
-    const promoCode = generatePromoCode();
+    const promoCode = generatePromoCode(data); // Use code from frontend
     const timestamp = new Date();
     const id = 'LKT' + Date.now();
+    
+    // Get promo code metadata from frontend or set defaults
+    const codeStatus = data.code_status || 'active';
+    const codeValue = data.code_value || 2000;
+    const codeExpiry = data.code_expiry || new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString();
     
     // Prepare row data in the exact order of headers
     const rowData = [
@@ -409,8 +432,18 @@ function doPost(e) {
       segment,
       'Nouveau',
       
+      // Promo Code Fields
+      promoCode,
+      codeStatus,
+      codeValue,
+      codeExpiry,
+      false, // Code Used (default false)
+      '', // Code Used Date (empty initially)
+      
       // Section 1: Profil
+      data.localisation || '',
       data.quartier || '',
+      data.diaspora_region || '',
       data.age || '',
       data.foyer_size || '',
       data.profession || '',
@@ -444,32 +477,43 @@ function doPost(e) {
       data.frequence_usage || '',
       data.panier_moyen || '',
       
-      // Section 7: Contact
+      // Section 7: Experience
       data.suggestions || '',
       data.inquietudes || '',
+      
+      // Contact Info (moved from section 7 to section 9)
       data.telephone || '',
       data.email || '',
       data.prenom || '',
-      data.beta_tester === 'true' || data.beta_tester === true,
+      data.beta_tester === 'oui' || data.beta_tester === true,
       
-      // Section 8-9: Diaspora
-      data.est_diaspora || '',
-      data.pays_residence || '',
-      data.freq_aide_alimentaire || '',
-      data.methode_aide_actuelle || '',
-      data.budget_aide_mensuel || '',
-      data.interet_diaspora || '',
-      data.fonctionnalites_diaspora || '',
-      data.frais_service_diaspora || '',
-      data.freq_utilisation_diaspora || '',
-      data.beneficiaire_quartier || '',
-      data.nombre_beneficiaires || '',
+      // Section 8: Zones
+      data.zones_livraison || '', // LOCAL: zones de livraison
+      data.zones_famille || '', // DIASPORA: zones famille
       
-      // Calculated
-      promoCode,
-      timestamp,
-      Utilities.formatDate(timestamp, 'GMT+0', 'w'),
-      Utilities.formatDate(timestamp, 'GMT+0', 'MMMM yyyy')
+      // Section 9: Services (different for local/diaspora)
+      data.suggestions_locaux || '', // LOCAL
+      data.fonctionnalites_essentielles || '', // DIASPORA
+      data.types_produits || '', // DIASPORA
+      data.preference_commande || '', // DIASPORA
+      data.frais_service_diaspora || '', // DIASPORA
+      data.freq_utilisation_diaspora || '', // DIASPORA
+      data.nombre_beneficiaires || '', // DIASPORA: number of households
+      
+      // Section 10: Final suggestions
+      data.services_manquants || '', // DIASPORA
+      data.difficultes_diaspora || '', // DIASPORA
+      data.fonctionnalites_innovantes || '', // DIASPORA
+      data.recommandation_diaspora || '', // DIASPORA
+      data.suggestions_amelioration || '', // LOCAL
+      data.services_souhaites || '', // LOCAL
+      data.recommandation_locale || '', // LOCAL
+      
+      // Additional metadata
+      Utilities.formatDate(timestamp, 'GMT+0', 'w'), // Week number
+      Utilities.formatDate(timestamp, 'GMT+0', 'MMMM yyyy'), // Month
+      data.interet_commande_proches || '', // DIASPORA interest level
+      data.occasions_utilisation || '' // DIASPORA occasions
     ];
     
     // Append the data to the sheet

@@ -1629,10 +1629,24 @@
                     </div>
 
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Informations sur votre/vos bénéficiaire(s) au Sénégal</label>
-                        <input type="text" name="beneficiaire_quartier" placeholder="Quartier du bénéficiaire principal">
-                        <div style="margin-top: 10px;">
-                            <input type="number" name="nombre_beneficiaires" placeholder="Nombre de bénéficiaires" min="1" max="10">
+                        <label>Combien de foyers au Sénégal souhaitez-vous aider régulièrement?</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="nombre_beneficiaires" value="1">
+                                <span>1 foyer (ma famille directe)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="nombre_beneficiaires" value="2">
+                                <span>2 foyers</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="nombre_beneficiaires" value="3-4">
+                                <span>3-4 foyers</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="nombre_beneficiaires" value="5+">
+                                <span>5 foyers ou plus</span>
+                            </label>
                         </div>
                     </div>
 
@@ -1646,7 +1660,7 @@
                     <!-- Contact fields for ALL users (both local and diaspora) -->
                     <div class="form-group">
                         <label>Pour recevoir votre code promo de 2000 FCFA: <span class="required">*</span></label>
-                        <input type="tel" name="telephone" placeholder="77 123 45 67 ou +33 6 12 34 56 78" required>
+                        <input type="tel" name="telephone" placeholder="+221 77 123 45 67 ou 77 123 45 67" required>
                         <span class="error">Numéro de téléphone requis</span>
                         <small style="color: #666; display: block; margin-top: 5px;">Format accepté: numéro local sénégalais ou international avec +</small>
                     </div>
@@ -1800,7 +1814,25 @@
                 <div class="success-icon">🎉</div>
                 <h2>Jërëjëf! Merci beaucoup!</h2>
                 <p>Vos réponses nous sont précieuses pour créer le meilleur service de courses en ligne à Dakar.</p>
-                <p style="margin-top: 20px;"><strong>Votre code promo de 2000 FCFA vous sera envoyé par SMS d'ici 24h.</strong></p>
+                
+                <div style="background: #E8F5E9; border: 2px solid #2ECC71; border-radius: 15px; padding: 20px; margin: 20px 0;">
+                    <p style="margin: 0 0 10px 0; color: #1B5E20; font-size: 14px;">Votre code promo exclusif:</p>
+                    <div id="promoCodeDisplay" style="font-size: 28px; font-weight: bold; color: #2ECC71; letter-spacing: 2px; margin: 10px 0;">
+                        LEEKET******
+                    </div>
+                    <p style="margin: 10px 0 0 0; color: #388E3C; font-size: 14px;">
+                        💰 Valeur: 2000 FCFA de réduction<br>
+                        📅 Valable 6 mois après le lancement<br>
+                        📱 Gardez ce code précieusement!
+                    </p>
+                </div>
+                
+                <p style="margin-top: 20px; color: #666; font-size: 14px;">
+                    <strong>🚀 Au lancement de Leeket:</strong><br>
+                    Nous vous enverrons ce code par SMS pour que vous soyez parmi les premiers à en profiter!<br>
+                    <span style="color: #2ECC71;">Gardez votre numéro actif, on vous contactera bientôt!</span>
+                </p>
+                
                 <p style="margin-top: 30px; font-size: 14px; color: #999;">
                     Suivez-nous : Instagram @leeket_sn | WhatsApp: 77 XXX XX XX
                 </p>

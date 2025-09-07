@@ -672,6 +672,24 @@ form.addEventListener('submit', async function (e) {
 
 	// Convert checkbox values to boolean
 	data.beta_tester = data.beta_tester === 'oui';
+	
+	// Generate unique promo code based on phone number
+	function generateUniquePromoCode(phone) {
+		// Clean phone for use in code
+		const phoneDigits = phone.replace(/\D/g, '');
+		const lastFour = phoneDigits.slice(-4);
+		const randomPart = Math.random().toString(36).substr(2, 4).toUpperCase();
+		// Format: LK + last 4 phone digits + 4 random chars
+		// Example: LK4567AB2C
+		return `LK${lastFour}${randomPart}`;
+	}
+	
+	// Generate promo code before submission
+	const promoCode = generateUniquePromoCode(data.telephone);
+	data.promo_code = promoCode;
+	data.code_status = 'active';
+	data.code_value = 2000; // FCFA value
+	data.code_expiry = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(); // 6 months
 
 	try {
 		// First try Netlify function, fallback to direct Google Sheets
@@ -687,9 +705,16 @@ form.addEventListener('submit', async function (e) {
 				body: JSON.stringify(data),
 			});
 			result = await response.json();
+			
+			// Check if we should fallback to Google Sheets
+			if (!result.success && result.error && 
+				(result.error.includes('Google Sheets') || result.error.includes('Airtable'))) {
+				console.log('Netlify function suggests using Google Sheets, falling back...');
+				throw new Error('Use Google Sheets fallback');
+			}
 		} catch (netlifyError) {
 			// Fallback to direct Google Sheets submission
-			console.log('Falling back to direct Google Sheets submission');
+			console.log('Falling back to direct Google Sheets submission:', netlifyError.message);
 			
 			const gsResponse = await fetch(GOOGLE_SCRIPT_URL, {
 				method: 'POST',
@@ -704,7 +729,7 @@ form.addEventListener('submit', async function (e) {
 			result = {
 				success: true,
 				message: 'Réponse enregistrée',
-				promoCode: 'LEEKET' + Math.random().toString(36).substr(2, 6).toUpperCase()
+				promoCode: promoCode // Use the generated code
 			};
 		}
 
@@ -736,11 +761,22 @@ form.addEventListener('submit', async function (e) {
 			return; // Stop here for duplicates
 		}
 
+		// Check if submission was successful
+		if (!result.success) {
+			throw new Error(result.error || 'Erreur lors de la soumission');
+		}
+		
 		// Success - show success message
 		form.style.display = 'none';
 		document.querySelector('.progress-container').style.display = 'none';
 		loading.style.display = 'none';
 		successMessage.style.display = 'block';
+		
+		// Display the promo code
+		const promoCodeDisplay = document.getElementById('promoCodeDisplay');
+		if (promoCodeDisplay && result.promoCode) {
+			promoCodeDisplay.textContent = result.promoCode;
+		}
 
 		// Log success for debugging
 		console.log('Survey submitted successfully:', result);
@@ -748,6 +784,8 @@ form.addEventListener('submit', async function (e) {
 		// Save to localStorage for future reference
 		if (result.promoCode) {
 			localStorage.setItem('leeket_promo', result.promoCode);
+			// Also save phone number to prevent duplicate codes
+			localStorage.setItem('leeket_phone', data.telephone);
 		}
 		
 		// Clear draft after successful submission
