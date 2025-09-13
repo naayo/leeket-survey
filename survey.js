@@ -744,21 +744,58 @@ form.addEventListener('submit', async function (e) {
 			// Fallback to direct Google Sheets submission
 			console.log('Falling back to direct Google Sheets submission:', netlifyError.message);
 			
-			const gsResponse = await fetch(GOOGLE_SCRIPT_URL, {
-				method: 'POST',
-				mode: 'no-cors',
-				headers: {
-					'Content-Type': 'text/plain',
-				},
-				body: JSON.stringify(data),
-			});
-			
-			// With no-cors, we can't read the response, so assume success
-			result = {
-				success: true,
-				message: 'Réponse enregistrée',
-				promoCode: promoCode // Use the generated code
-			};
+			try {
+				const gsResponse = await fetch(GOOGLE_SCRIPT_URL, {
+					method: 'POST',
+					mode: 'cors', // CHANGED: Use CORS to read response for duplicate detection
+					headers: {
+						'Content-Type': 'text/plain',
+					},
+					body: JSON.stringify(data),
+				});
+				
+				// Now we can read the response from Google Sheets
+				const responseText = await gsResponse.text();
+				console.log('Google Sheets raw response:', responseText);
+				
+				try {
+					result = JSON.parse(responseText);
+					console.log('Parsed Google Sheets response:', result);
+					
+					// Check if it's a duplicate
+					if (result.isDuplicate) {
+						console.log('🚫 Duplicate detected by Google Sheets');
+						// The duplicate will be handled by the code below
+					}
+				} catch (parseError) {
+					console.log('Could not parse response, assuming success');
+					// If parsing fails, create a basic success response
+					result = {
+						success: true,
+						message: 'Réponse enregistrée',
+						promoCode: promoCode
+					};
+				}
+			} catch (gsError) {
+				console.error('Google Sheets submission failed:', gsError);
+				// If CORS fails, try no-cors as last resort
+				console.log('Retrying with no-cors mode...');
+				await fetch(GOOGLE_SCRIPT_URL, {
+					method: 'POST',
+					mode: 'no-cors',
+					headers: {
+						'Content-Type': 'text/plain',
+					},
+					body: JSON.stringify(data),
+				});
+				
+				// Can't read response with no-cors, assume success
+				result = {
+					success: true,
+					message: 'Réponse enregistrée (mode dégradé)',
+					promoCode: promoCode
+				};
+			}
 		}
 
 		// Check if it's a duplicate submission
