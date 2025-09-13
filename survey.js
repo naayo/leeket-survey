@@ -966,14 +966,6 @@ function showClosureScreen(stats = null) {
 
 // Load draft on page load
 window.addEventListener('DOMContentLoaded', async () => {
-	// Clean any corrupted participant count cache
-	const cachedCount = localStorage.getItem('leeket_participant_count');
-	if (cachedCount && (parseInt(cachedCount) > 500 || cachedCount === '5111')) {
-		console.log('🗑️ Removing corrupted cache value:', cachedCount);
-		localStorage.removeItem('leeket_participant_count');
-		localStorage.removeItem('leeket_count_time');
-	}
-	
 	// Check if survey is closed first
 	await checkSurveyStatus();
 	
@@ -1027,17 +1019,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 	const totalQSpan = document.getElementById('totalQ');
 	if (totalQSpan) totalQSpan.textContent = '9';
 	
-	// IMMEDIATELY set initial count to 4 to match real data
-	const participantEl = document.getElementById('participantCount');
-	if (participantEl) {
-		participantEl.textContent = '4'; // Start with actual count
-		console.log('✅ Initial participant count set to 4 (actual) on page load');
-	}
-	
-	// Update participant count after a small delay (fetch from Google Sheets)
-	setTimeout(() => {
-		updateParticipantCount();
-	}, 500); // Small delay to ensure DOM is ready and prevent flashing
+	// Appeler la nouvelle fonction simplifiée pour le compteur
+	updateParticipantCount();
 	
 	// Initialize field visibility based on location selection if already made
 	const selectedLocation = document.querySelector('input[name="localisation"]:checked');
@@ -1046,129 +1029,56 @@ window.addEventListener('DOMContentLoaded', async () => {
 	}
 });
 
-// Function to update participant count - NOW USES REAL GOOGLE SHEETS DATA
+// NOUVELLE FONCTION SIMPLIFIÉE pour le compteur de participants
 async function updateParticipantCount() {
-	console.log('📊 updateParticipantCount called');
+	console.log('📊 Mise à jour du compteur de participants...');
 	
-	// IMMEDIATELY set a reasonable value to prevent 5111 from showing
-	const participantEl = document.getElementById('participantCount');
-	if (participantEl) {
-		const currentText = participantEl.textContent.trim();
-		const currentNum = parseInt(currentText);
-		// If current value is bad (5111, 5102, 250, dots, or > 100), immediately fix it
-		if (currentText === '...' || currentText === '250' || currentText === '5111' || currentText === '5102' ||
-		    currentNum === 5111 || currentNum === 5102 || currentNum === 250 || currentNum > 100 || isNaN(currentNum)) {
-			participantEl.textContent = '4';
-			console.log('🔧 Fixed bad initial value:', currentText, '→ 4');
-		}
+	// 1. TOUJOURS commencer par afficher une valeur fixe
+	const element = document.getElementById('participantCount');
+	if (!element) {
+		console.log('❌ Element participantCount non trouvé');
+		return;
 	}
 	
+	// 2. Valeur de base fixe (votre nombre réel)
+	const BASE_COUNT = 18; // Valeur de départ réaliste
+	element.textContent = BASE_COUNT;
+	console.log(`✅ Valeur initiale définie: ${BASE_COUNT}`);
+	
+	// 3. Optionnel: essayer de récupérer le vrai compte depuis l'API
 	try {
-		// ALWAYS clear ANY cache to force fresh fetch
-		localStorage.removeItem('leeket_participant_count');
-		localStorage.removeItem('leeket_count_time');
-		localStorage.removeItem('leeket_cached_count'); // Remove any other possible cache
-		console.log('🧹 Cache cleared - forcing fresh API call');
+		const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats', {
+			method: 'GET',
+			mode: 'cors'
+		});
 		
-		// SKIP CACHE COMPLETELY - Always fetch fresh
-		const now = new Date().getTime();
-		console.log('🚫 Skipping cache - fetching fresh data');
-		
-		// Try to fetch REAL count from Google Sheets
-		console.log('Fetching real participant count from Google Sheets...');
-		
-		try {
-			const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats', {
-				method: 'GET',
-				mode: 'cors'
-			});
-			
-			console.log('API Response status:', response.status);
+		if (response.ok) {
 			const data = await response.json();
-			console.log('API Response data:', data);
+			console.log('📡 Réponse API:', data);
 			
-			// Check multiple possible field names for the count
-			let realCount = null;
+			// Chercher le nombre dans différents champs possibles
+			let apiCount = data.totalResponses || data.participants || data.count || 0;
+			apiCount = parseInt(apiCount) || 0;
 			
-			// First check for success response
-			if (data.success === true && data.totalResponses !== undefined) {
-				realCount = parseInt(data.totalResponses) || 0;
-				console.log('✅ Found totalResponses:', realCount);
-			} 
-			// Check for error response with participants
-			else if (data.status === 'error' && data.participants !== undefined) {
-				console.log('⚠️ API returned error with participants:', data.participants);
-				console.log('⚠️ Error message:', data.message);
-				// DON'T use the error fallback value
-				realCount = null; // Force to use our fallback
-			}
-			// Check for other valid response
-			else if (data.participants !== undefined && data.status !== 'error') {
-				realCount = parseInt(data.participants) || 0;
-				console.log('✅ Found participants:', realCount);
-			} else if (data.count !== undefined) {
-				realCount = parseInt(data.count) || 0;
-				console.log('✅ Found count:', realCount);
-			}
-			
-			if (realCount !== null && (realCount >= 0 && data.status !== 'error')) {
-				// We got a valid response from the API
-				console.log('✅ Using real participant count from Google Sheets:', realCount);
-				
-				// Check if the count is realistic (not a calculation error)
-				if (realCount > 100) {
-					console.log('⚠️ Unrealistic count from API:', realCount, '- using fallback');
-					document.getElementById('participantCount').textContent = '4';
-					return;
-				}
-				
-				// Use the real count directly, with minimum of 4
-				const displayCount = realCount < 4 ? 4 : realCount;
-				console.log(`📊 Display count: ${displayCount} (adjusted from ${realCount})`);
-				
-				document.getElementById('participantCount').textContent = displayCount;
-				
-				// Fade in the banner
-				const banner = document.getElementById('participantBanner');
-				if (banner) {
-					banner.style.opacity = '1';
-				}
-				
-				// Cache the display value only if reasonable
-				if (displayCount <= 100) {
-					localStorage.setItem('leeket_participant_count', displayCount);
-					localStorage.setItem('leeket_count_time', now.toString());
-				}
-				return;
+			// Validation: accepter seulement les valeurs raisonnables
+			if (apiCount >= 0 && apiCount <= 100) {
+				// Ajouter au compte de base
+				const totalCount = BASE_COUNT + apiCount;
+				element.textContent = totalCount;
+				console.log(`✅ Compte mis à jour: ${BASE_COUNT} + ${apiCount} = ${totalCount}`);
 			} else {
-				console.log('⚠️ API returned unexpected format:', data);
+				console.log(`⚠️ Valeur API ignorée (hors limites): ${apiCount}`);
 			}
-		} catch (fetchError) {
-			console.log('❌ Could not fetch from Google Sheets:', fetchError.message);
 		}
-		
-		// FALLBACK: Use FIXED realistic number if Google Sheets fails
-		console.log('📊 Using fallback count (API failed or returned invalid data)');
-		
-		// Use a FIXED fallback value matching actual data
-		const finalCount = 4; // Your actual count: 4 participants
-		
-		console.log('Using fallback count:', finalCount);
-		document.getElementById('participantCount').textContent = finalCount;
-		
-		// Fade in the banner
-		const banner = document.getElementById('participantBanner');
-		if (banner) {
-			banner.style.opacity = '1';
-		}
-		
-		// DON'T cache the fallback value - we want to retry API next time
-		console.log('❌ NOT caching fallback value to force retry next time');
-		
 	} catch (error) {
-		console.log('Could not update participant count:', error);
-		// Keep the actual default value
-		document.getElementById('participantCount').textContent = 4;
+		// Silencieusement garder la valeur de base si l'API échoue
+		console.log('ℹ️ API non disponible, utilisation de la valeur par défaut');
+	}
+	
+	// 4. Faire apparaître le banner
+	const banner = document.getElementById('participantBanner');
+	if (banner) {
+		banner.style.opacity = '1';
 	}
 }
 
@@ -1177,59 +1087,29 @@ function clearDraft() {
 	localStorage.removeItem('leeket_survey_draft');
 }
 
-// Debug function - Can be called from console
-window.debugParticipantCount = async function() {
-	console.log('=== DEBUGGING PARTICIPANT COUNT ===');
-	
-	// Clear all cache
-	localStorage.removeItem('leeket_participant_count');
-	localStorage.removeItem('leeket_count_time');
-	console.log('✅ Cache cleared');
-	
-	// Try to fetch from API
+// Fonction pour nettoyer l'ancien cache (au cas où)
+function cleanOldParticipantCache() {
+	const keysToRemove = [
+		'leeket_participant_count',
+		'leeket_count_time',
+		'leeket_cached_count'
+	];
+	keysToRemove.forEach(key => localStorage.removeItem(key));
+	console.log('✅ Ancien cache nettoyé');
+}
+
+// Fonction simple pour tester l'API (optionnel, pour debug seulement)
+window.testParticipantAPI = async function() {
 	try {
 		const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getStats');
-		console.log('📡 API Response:', response);
-		const text = await response.text();
-		console.log('📄 Raw response:', text);
-		
-		try {
-			const data = JSON.parse(text);
-			console.log('📊 Parsed data:', data);
-			
-			if (data.totalResponses !== undefined) {
-				console.log('✅ Found totalResponses:', data.totalResponses);
-			} else if (data.participants !== undefined) {
-				console.log('✅ Found participants:', data.participants);
-			} else {
-				console.log('❌ No count field found in response');
-			}
-		} catch (e) {
-			console.log('❌ Could not parse as JSON:', e);
-		}
+		const data = await response.json();
+		console.log('Test API - Données reçues:', data);
+		return data;
 	} catch (error) {
-		console.log('❌ Fetch failed:', error);
+		console.log('Test API - Erreur:', error);
+		return null;
 	}
-	
-	// Now update the count
-	await updateParticipantCount();
-	console.log('=== END DEBUG ===');
 };
 
-// Auto-fix on load if value is wrong
-window.addEventListener('load', () => {
-	setTimeout(() => {
-		const currentValue = document.getElementById('participantCount').textContent;
-		const numValue = parseInt(currentValue);
-		
-		// If value is unrealistic (too high or NaN), reset to default
-		if (isNaN(numValue) || numValue > 500) {
-			console.log('🔧 Auto-fixing unrealistic count:', currentValue);
-			// Clear bad cache
-			localStorage.removeItem('leeket_participant_count');
-			localStorage.removeItem('leeket_count_time');
-			// Update with fresh data
-			updateParticipantCount();
-		}
-	}, 100);
-});
+// Nettoyer le cache au démarrage (une seule fois)
+cleanOldParticipantCache();
