@@ -15,8 +15,8 @@ const SURVEY_CONFIG = {
 
 	// Duplicate submission settings
 	duplicateDetection: {
-		enabled: true, // Set to false to allow duplicate submissions
-		checkPhone: true, // Check for duplicate phone numbers
+		enabled: false, // Set to false to allow duplicate submissions
+		checkPhone: false, // Check for duplicate phone numbers
 		checkEmail: true, // Check for duplicate emails
 		message: 'Vous avez déjà participé au sondage', // Custom duplicate message
 		showExistingPromo: true, // Show existing promo code to returning users
