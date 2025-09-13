@@ -718,6 +718,10 @@ form.addEventListener('submit', async function (e) {
 	data.code_status = 'active';
 	data.code_value = 2000; // FCFA value
 	data.code_expiry = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(); // 6 months
+	
+	// Add duplicate detection preference to data
+	const duplicateConfig = SURVEY_CONFIG.duplicateDetection || { enabled: true };
+	data.skip_duplicate_check = !duplicateConfig.enabled; // Tell server to skip check if disabled
 
 	try {
 		// First try Netlify function, fallback to direct Google Sheets
@@ -798,24 +802,37 @@ form.addEventListener('submit', async function (e) {
 			}
 		}
 
-		// Check if it's a duplicate submission
-		if (result.isDuplicate) {
+		// Check if it's a duplicate submission (only if detection is enabled)
+		const duplicateConfig = SURVEY_CONFIG.duplicateDetection || { enabled: true };
+		
+		if (duplicateConfig.enabled && result.isDuplicate) {
 			// Hide loading
 			loading.style.display = 'none';
 			if (loadingOverlay) {
 				loadingOverlay.classList.remove('active');
 			}
 			
+			// Use custom message if configured
+			const duplicateMessage = duplicateConfig.message || 'Vous avez déjà participé au sondage';
+			
 			// Show duplicate message
 			errorMessage.style.display = 'block';
-			errorMessage.innerHTML = `
+			
+			// Build the message HTML
+			let messageHTML = `
 				<div style="background: #FFF3CD; border: 1px solid #FFC107; color: #856404; padding: 15px; border-radius: 8px;">
 					<strong>⚠️ Participation déjà enregistrée</strong><br>
-					${result.message}<br><br>
+					${result.message || duplicateMessage}<br><br>`;
+			
+			// Show promo code if configured
+			if (duplicateConfig.showExistingPromo !== false && result.promoCode) {
+				messageHTML += `
 					Votre code promo: <strong style="font-size: 18px;">${result.promoCode}</strong><br>
-					<small>Utilisez ce code lors de votre première commande</small>
-				</div>
-			`;
+					<small>Utilisez ce code lors de votre première commande</small>`;
+			}
+			
+			messageHTML += `</div>`;
+			errorMessage.innerHTML = messageHTML;
 			
 			// Re-enable submit button with different text
 			btnSubmit.disabled = false;
@@ -827,6 +844,14 @@ form.addEventListener('submit', async function (e) {
 			}
 			
 			return; // Stop here for duplicates
+		}
+		
+		// If duplicates are disabled but response indicates duplicate, log it but continue
+		if (!duplicateConfig.enabled && result.isDuplicate) {
+			console.log('ℹ️ Duplicate detected but detection is disabled, continuing...');
+			// Override the duplicate flag to allow submission
+			result.isDuplicate = false;
+			result.success = true;
 		}
 
 		// Check if submission was successful

@@ -13,6 +13,15 @@ const SURVEY_CONFIG = {
 	// Target number of responses (optional - for automatic closure)
 	targetResponses: 5000, // Will close after reaching this number
 
+	// Duplicate submission settings
+	duplicateDetection: {
+		enabled: true, // Set to false to allow duplicate submissions
+		checkPhone: true, // Check for duplicate phone numbers
+		checkEmail: true, // Check for duplicate emails
+		message: 'Vous avez déjà participé au sondage', // Custom duplicate message
+		showExistingPromo: true, // Show existing promo code to returning users
+	},
+
 	// Messages
 	messages: {
 		closureTitle: '✓ Merci pour votre participation !',
