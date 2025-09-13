@@ -966,6 +966,14 @@ function showClosureScreen(stats = null) {
 
 // Load draft on page load
 window.addEventListener('DOMContentLoaded', async () => {
+	// Clean any corrupted participant count cache
+	const cachedCount = localStorage.getItem('leeket_participant_count');
+	if (cachedCount && (parseInt(cachedCount) > 500 || cachedCount === '5111')) {
+		console.log('🗑️ Removing corrupted cache value:', cachedCount);
+		localStorage.removeItem('leeket_participant_count');
+		localStorage.removeItem('leeket_count_time');
+	}
+	
 	// Check if survey is closed first
 	await checkSurveyStatus();
 	
@@ -1019,8 +1027,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 	const totalQSpan = document.getElementById('totalQ');
 	if (totalQSpan) totalQSpan.textContent = '9';
 	
-	// Update participant count (fetch from Google Sheets or use cached value)
-	updateParticipantCount();
+	// IMMEDIATELY set initial count to 15 to prevent bad values from showing
+	const participantEl = document.getElementById('participantCount');
+	if (participantEl) {
+		participantEl.textContent = '15'; // Start with 15 immediately
+		console.log('✅ Initial participant count set to 15 on page load');
+	}
+	
+	// Update participant count after a small delay (fetch from Google Sheets)
+	setTimeout(() => {
+		updateParticipantCount();
+	}, 500); // Small delay to ensure DOM is ready and prevent flashing
 	
 	// Initialize field visibility based on location selection if already made
 	const selectedLocation = document.querySelector('input[name="localisation"]:checked');
@@ -1033,10 +1050,24 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function updateParticipantCount() {
 	console.log('📊 updateParticipantCount called');
 	
+	// IMMEDIATELY set a reasonable value to prevent 5111 from showing
+	const participantEl = document.getElementById('participantCount');
+	if (participantEl) {
+		const currentText = participantEl.textContent.trim();
+		const currentNum = parseInt(currentText);
+		// If current value is bad (5111, 250, dots, or > 100), immediately fix it
+		if (currentText === '...' || currentText === '250' || currentText === '5111' || 
+		    currentNum === 5111 || currentNum === 250 || currentNum > 100 || isNaN(currentNum)) {
+			participantEl.textContent = '15';
+			console.log('🔧 Fixed bad initial value:', currentText, '→ 15');
+		}
+	}
+	
 	try {
 		// ALWAYS clear ANY cache to force fresh fetch
 		localStorage.removeItem('leeket_participant_count');
 		localStorage.removeItem('leeket_count_time');
+		localStorage.removeItem('leeket_cached_count'); // Remove any other possible cache
 		console.log('🧹 Cache cleared - forcing fresh API call');
 		
 		// SKIP CACHE COMPLETELY - Always fetch fresh
