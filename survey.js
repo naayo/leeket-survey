@@ -1027,11 +1027,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 	const totalQSpan = document.getElementById('totalQ');
 	if (totalQSpan) totalQSpan.textContent = '9';
 	
-	// IMMEDIATELY set initial count to 15 to prevent bad values from showing
+	// IMMEDIATELY set initial count to 4 to match real data
 	const participantEl = document.getElementById('participantCount');
 	if (participantEl) {
-		participantEl.textContent = '15'; // Start with 15 immediately
-		console.log('✅ Initial participant count set to 15 on page load');
+		participantEl.textContent = '4'; // Start with actual count
+		console.log('✅ Initial participant count set to 4 (actual) on page load');
 	}
 	
 	// Update participant count after a small delay (fetch from Google Sheets)
@@ -1055,11 +1055,11 @@ async function updateParticipantCount() {
 	if (participantEl) {
 		const currentText = participantEl.textContent.trim();
 		const currentNum = parseInt(currentText);
-		// If current value is bad (5111, 250, dots, or > 100), immediately fix it
-		if (currentText === '...' || currentText === '250' || currentText === '5111' || 
-		    currentNum === 5111 || currentNum === 250 || currentNum > 100 || isNaN(currentNum)) {
-			participantEl.textContent = '15';
-			console.log('🔧 Fixed bad initial value:', currentText, '→ 15');
+		// If current value is bad (5111, 5102, 250, dots, or > 100), immediately fix it
+		if (currentText === '...' || currentText === '250' || currentText === '5111' || currentText === '5102' ||
+		    currentNum === 5111 || currentNum === 5102 || currentNum === 250 || currentNum > 100 || isNaN(currentNum)) {
+			participantEl.textContent = '4';
+			console.log('🔧 Fixed bad initial value:', currentText, '→ 4');
 		}
 	}
 	
@@ -1115,10 +1115,16 @@ async function updateParticipantCount() {
 				// We got a valid response from the API
 				console.log('✅ Using real participant count from Google Sheets:', realCount);
 				
-				// Add a minimum base count of 15 to the real count
-				const baseCount = 15;
-				const displayCount = baseCount + realCount;
-				console.log(`📊 Display count: ${baseCount} (base) + ${realCount} (real) = ${displayCount}`);
+				// Check if the count is realistic (not a calculation error)
+				if (realCount > 100) {
+					console.log('⚠️ Unrealistic count from API:', realCount, '- using fallback');
+					document.getElementById('participantCount').textContent = '4';
+					return;
+				}
+				
+				// Use the real count directly, with minimum of 4
+				const displayCount = realCount < 4 ? 4 : realCount;
+				console.log(`📊 Display count: ${displayCount} (adjusted from ${realCount})`);
 				
 				document.getElementById('participantCount').textContent = displayCount;
 				
@@ -1128,9 +1134,11 @@ async function updateParticipantCount() {
 					banner.style.opacity = '1';
 				}
 				
-				// Cache the display value (base + real)
-				localStorage.setItem('leeket_participant_count', displayCount);
-				localStorage.setItem('leeket_count_time', now.toString());
+				// Cache the display value only if reasonable
+				if (displayCount <= 100) {
+					localStorage.setItem('leeket_participant_count', displayCount);
+					localStorage.setItem('leeket_count_time', now.toString());
+				}
 				return;
 			} else {
 				console.log('⚠️ API returned unexpected format:', data);
@@ -1142,8 +1150,8 @@ async function updateParticipantCount() {
 		// FALLBACK: Use FIXED realistic number if Google Sheets fails
 		console.log('📊 Using fallback count (API failed or returned invalid data)');
 		
-		// Use a FIXED fallback value - starting at 15
-		const finalCount = 15; // Initial value: 15 participants
+		// Use a FIXED fallback value matching actual data
+		const finalCount = 4; // Your actual count: 4 participants
 		
 		console.log('Using fallback count:', finalCount);
 		document.getElementById('participantCount').textContent = finalCount;
@@ -1159,8 +1167,8 @@ async function updateParticipantCount() {
 		
 	} catch (error) {
 		console.log('Could not update participant count:', error);
-		// Keep a realistic default value
-		document.getElementById('participantCount').textContent = 15;
+		// Keep the actual default value
+		document.getElementById('participantCount').textContent = 4;
 	}
 }
 
