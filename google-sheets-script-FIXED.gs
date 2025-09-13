@@ -618,6 +618,12 @@ function checkDuplicate(sheet, phone, email) {
 	// Log for debugging
 	console.log('Checking duplicate for phone:', phone, '-> cleaned:', cleanPhone);
 	console.log('Column indices - Phone:', phoneCol, 'Email:', emailCol, 'Timestamp:', timestampCol, 'Promo:', promoCol);
+	
+	// Debug: Show headers to verify column detection
+	console.log('Headers found:', headers.slice(0, 12));
+	if (promoCol >= 0) {
+		console.log('Promo column header:', headers[promoCol]);
+	}
 
 	// Check each row for duplicates
 	for (let i = 1; i < values.length; i++) {
@@ -639,11 +645,30 @@ function checkDuplicate(sheet, phone, email) {
 
 		// Check if phones match (comparing last 9 digits)
 		if (phoneEnd && rowPhoneEnd && phoneEnd === rowPhoneEnd) {
+			const existingCode = values[i][promoCol];
 			console.log('DUPLICATE FOUND: Phone', cleanPhone, 'matches row', i+1);
+			console.log('Existing promo code at column', promoCol, ':', existingCode);
+			
+			// Try multiple columns if promo code is not found
+			if (!existingCode || existingCode === 'N/A') {
+				// Try column 5 (0-indexed) which is usually "Code Promo"
+				const altCode = values[i][5];
+				console.log('Trying alternative column 5:', altCode);
+				if (altCode && altCode !== 'N/A') {
+					return {
+						isDuplicate: true,
+						existingRow: i + 1,
+						existingPromo: altCode,
+						existingDate: values[i][timestampCol] || new Date(),
+						matchType: 'phone',
+					};
+				}
+			}
+			
 			return {
 				isDuplicate: true,
 				existingRow: i + 1,
-				existingPromo: values[i][promoCol] || 'N/A',
+				existingPromo: existingCode || 'N/A',
 				existingDate: values[i][timestampCol] || new Date(),
 				matchType: 'phone',
 			};
@@ -653,11 +678,30 @@ function checkDuplicate(sheet, phone, email) {
 		const rowEmail = values[i][emailCol];
 		if (email && rowEmail && 
 			email.toString().toLowerCase() === rowEmail.toString().toLowerCase()) {
+			const existingCode = values[i][promoCol];
 			console.log('DUPLICATE FOUND: Email', email, 'matches row', i+1);
+			console.log('Existing promo code at column', promoCol, ':', existingCode);
+			
+			// Try multiple columns if promo code is not found
+			if (!existingCode || existingCode === 'N/A') {
+				// Try column 5 (0-indexed) which is usually "Code Promo"
+				const altCode = values[i][5];
+				console.log('Trying alternative column 5:', altCode);
+				if (altCode && altCode !== 'N/A') {
+					return {
+						isDuplicate: true,
+						existingRow: i + 1,
+						existingPromo: altCode,
+						existingDate: values[i][timestampCol] || new Date(),
+						matchType: 'email',
+					};
+				}
+			}
+			
 			return {
 				isDuplicate: true,
 				existingRow: i + 1,
-				existingPromo: values[i][promoCol] || 'N/A',
+				existingPromo: existingCode || 'N/A',
 				existingDate: values[i][timestampCol] || new Date(),
 				matchType: 'email',
 			};
