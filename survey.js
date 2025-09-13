@@ -1084,8 +1084,10 @@ async function updateParticipantCount() {
 				// We got a valid response from the API
 				console.log('✅ Using real participant count from Google Sheets:', realCount);
 				
-				// Show the real count (even if it's 0)
-				const displayCount = realCount === 0 ? 0 : realCount;
+				// Add a minimum base count of 15 to the real count
+				const baseCount = 15;
+				const displayCount = baseCount + realCount;
+				console.log(`📊 Display count: ${baseCount} (base) + ${realCount} (real) = ${displayCount}`);
 				
 				document.getElementById('participantCount').textContent = displayCount;
 				
@@ -1095,7 +1097,7 @@ async function updateParticipantCount() {
 					banner.style.opacity = '1';
 				}
 				
-				// Cache the real value
+				// Cache the display value (base + real)
 				localStorage.setItem('leeket_participant_count', displayCount);
 				localStorage.setItem('leeket_count_time', now.toString());
 				return;
@@ -1109,10 +1111,10 @@ async function updateParticipantCount() {
 		// FALLBACK: Use FIXED realistic number if Google Sheets fails
 		console.log('📊 Using fallback count (API failed or returned invalid data)');
 		
-		// Use a FIXED fallback value (not calculated)
-		const finalCount = 4; // Fixed to 4 - your actual count
+		// Use a FIXED fallback value - starting at 15
+		const finalCount = 15; // Initial value: 15 participants
 		
-		console.log('Using simulated count:', finalCount);
+		console.log('Using fallback count:', finalCount);
 		document.getElementById('participantCount').textContent = finalCount;
 		
 		// Fade in the banner
@@ -1179,9 +1181,16 @@ window.debugParticipantCount = async function() {
 window.addEventListener('load', () => {
 	setTimeout(() => {
 		const currentValue = document.getElementById('participantCount').textContent;
-		if (parseInt(currentValue) > 100) {
+		const numValue = parseInt(currentValue);
+		
+		// If value is unrealistic (too high or NaN), reset to default
+		if (isNaN(numValue) || numValue > 500) {
 			console.log('🔧 Auto-fixing unrealistic count:', currentValue);
-			window.debugParticipantCount();
+			// Clear bad cache
+			localStorage.removeItem('leeket_participant_count');
+			localStorage.removeItem('leeket_count_time');
+			// Update with fresh data
+			updateParticipantCount();
 		}
 	}, 100);
 });
