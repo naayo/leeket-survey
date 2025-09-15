@@ -1,7 +1,7 @@
 {
-  "name": "leeket-survey",
+  "name": "marche-survey",
   "version": "1.0.0",
-  "description": "Formulaire de sondage pour Leeket - Service de livraison de courses à Dakar",
+  "description": "Formulaire de sondage pour service de livraison de courses à Dakar",
   "scripts": {
     "dev": "netlify dev",
     "deploy": "netlify deploy",
@@ -16,6 +16,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "author": "Leeket",
+  "author": "MarcheApp",
   "license": "MIT"
 }

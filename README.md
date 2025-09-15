@@ -1,10 +1,10 @@
-# Leeket Survey - Formulaire de Sondage
+# Marché Digital Survey - Formulaire de Sondage
 
-Formulaire de sondage pour Leeket, une startup sénégalaise de livraison de courses à Dakar, avec intégration Airtable via Netlify Functions.
+Formulaire de sondage pour une startup sénégalaise de livraison de courses à Dakar, avec intégration Airtable via Netlify Functions.
 
 ## 🎯 Objectif
 
-Collecter des retours utilisateurs pour valider le product-market fit de Leeket et construire une base de 500 leads qualifiés pour le lancement du service, incluant la diaspora sénégalaise.
+Collecter des retours utilisateurs pour valider le product-market fit de notre solution et construire une base de 500 leads qualifiés pour le lancement du service, incluant la diaspora sénégalaise.
 
 ## 🚀 Installation
 
@@ -20,7 +20,7 @@ Collecter des retours utilisateurs pour valider le product-market fit de Leeket 
 1. **Cloner le projet**
 ```bash
 git clone [votre-repo]
-cd leeket-survey
+cd marche-survey
 ```
 
 2. **Installer les dépendances**
@@ -140,7 +140,7 @@ http://localhost:8888
 ## 📊 Structure du projet
 
 ```
-leeket-survey/
+marche-survey/
 ├── index.html          # Formulaire principal (monochrome vert)
 ├── survey.js           # JavaScript avec auto-save et validation
 ├── success.html        # Page de confirmation
@@ -205,10 +205,10 @@ Segments :
 
 ## 📱 Contact
 
-- Email : contact@leeket.sn
-- Instagram : @leeket_sn
+- Email : contact@marcheapp.sn
+- Instagram : @marcheapp_sn
 - WhatsApp : +221 77 XXX XX XX
 
 ## 📄 Licence
 
-MIT License - Leeket 2024
+MIT License - Marché Digital 2024

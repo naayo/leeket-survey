@@ -840,7 +840,7 @@ form.addEventListener('submit', async function (e) {
 			
 			// Save promo code anyway
 			if (result.promoCode) {
-				localStorage.setItem('leeket_promo', result.promoCode);
+				localStorage.setItem('marche_promo', result.promoCode);
 			}
 			
 			return; // Stop here for duplicates
@@ -879,9 +879,9 @@ form.addEventListener('submit', async function (e) {
 
 		// Save to localStorage for future reference
 		if (result.promoCode) {
-			localStorage.setItem('leeket_promo', result.promoCode);
+			localStorage.setItem('marche_promo', result.promoCode);
 			// Also save phone number to prevent duplicate codes
-			localStorage.setItem('leeket_phone', data.telephone);
+			localStorage.setItem('marche_phone', data.telephone);
 		}
 		
 		// Clear draft after successful submission
@@ -903,7 +903,7 @@ form.addEventListener('submit', async function (e) {
 		btnSubmit.textContent = 'Envoyer mes réponses 🎉';
 
 		// Fallback: save data locally
-		localStorage.setItem('leeket_survey_backup', JSON.stringify(data));
+		localStorage.setItem('marche_survey_backup', JSON.stringify(data));
 		console.log('Data saved locally as backup');
 	}
 });
@@ -928,7 +928,7 @@ function autoSaveDraft() {
 			}
 		}
 
-		localStorage.setItem('leeket_survey_draft', JSON.stringify(draft));
+		localStorage.setItem('marche_survey_draft', JSON.stringify(draft));
 		console.log('Draft saved');
 	}, 2000);
 }
@@ -1031,7 +1031,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 	// Check if survey is closed first
 	await checkSurveyStatus();
 	
-	const draft = localStorage.getItem('leeket_survey_draft');
+	const draft = localStorage.getItem('marche_survey_draft');
 	if (draft) {
 		try {
 			const draftData = JSON.parse(draft);
@@ -1146,15 +1146,15 @@ async function updateParticipantCount() {
 
 // Clear draft on successful submission
 function clearDraft() {
-	localStorage.removeItem('leeket_survey_draft');
+	localStorage.removeItem('marche_survey_draft');
 }
 
 // Fonction pour nettoyer l'ancien cache (au cas où)
 function cleanOldParticipantCache() {
 	const keysToRemove = [
-		'leeket_participant_count',
-		'leeket_count_time',
-		'leeket_cached_count'
+		'marche_participant_count',
+		'marche_count_time',
+		'marche_cached_count'
 	];
 	keysToRemove.forEach(key => localStorage.removeItem(key));
 	console.log('✅ Ancien cache nettoyé');

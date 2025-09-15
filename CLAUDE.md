@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Leeket Survey - A market validation survey form for a Senegalese grocery delivery startup targeting Dakar residents. The project collects user feedback about interest in a 24-48h advance ordering system for fresh groceries with recipe-based ingredient packs.
+Market Survey - A market validation survey form for a Senegalese grocery delivery startup targeting Dakar residents. The project collects user feedback about interest in a 24-48h advance ordering system for fresh groceries with recipe-based ingredient packs. (Project name hidden for security reasons)
 
 ## Current Status
 
@@ -63,7 +63,7 @@ netlify deploy --prod
 2. **Habitudes courses** - Shopping habits (locations, frequency, budget, challenges)
 3. **Préférences culinaires** - Culinary preferences (Senegalese dishes, cooking frequency)
 4. **Système commande** - Order system (24/48h delay, scheduled orders)
-5. **Concept Leeket** - Concept validation (interest score 1-5, preferred services)
+5. **Concept** - Concept validation (interest score 1-5, preferred services)
 6. **Prix** - Pricing (pack prices 2500-10000 FCFA, delivery preferences)
 7. **Contact** - Contact info (phone required, email optional, beta tester opt-in)
 
