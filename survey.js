@@ -1103,7 +1103,7 @@ async function updateParticipantCount() {
 	}
 	
 	// 2. Valeur de base fixe (votre nombre réel)
-	const BASE_COUNT = 18; // Valeur de départ réaliste
+	const BASE_COUNT = 200; // Valeur de départ réaliste
 	element.textContent = BASE_COUNT;
 	console.log(`✅ Valeur initiale définie: ${BASE_COUNT}`);
 	
