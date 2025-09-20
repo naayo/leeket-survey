@@ -1822,12 +1822,7 @@
                         </div>
                     </div>
 
-                    <!-- LOCAL Section 9: Keep existing questions for locals -->
-                    <!-- These questions will remain for local users -->
-                    <div class="form-group local-only" style="display: none;">
-                        <label>Avez-vous des suggestions pour améliorer notre solution?</label>
-                        <textarea name="suggestions_locaux" rows="4" placeholder="Vos idées et suggestions..."></textarea>
-                    </div>
+                    <!-- LOCAL Section 9: Contact préférences pour les locaux -->
 
                     <div class="form-group diaspora-only" style="display: none;">
                         <label>Combien seriez-vous prêt à payer en frais de service (en plus du prix des courses)?</label>
@@ -2013,15 +2008,40 @@
                         </div>
                     </div>
 
-                    <!-- LOCAL Section 10: Suggestions locales -->
+                    <!-- LOCAL Section 10: Services additionnels -->
                     <div class="form-group local-only" style="display: none;">
-                        <label>Avez-vous des suggestions pour améliorer notre service?</label>
-                        <textarea name="suggestions_amelioration" rows="4" placeholder="Vos idées et suggestions..."></textarea>
+                        <label>Quels services complémentaires vous intéresseraient le plus?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="resto_partenaire">
+                                <span>Plats préparés de restaurants partenaires</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="produits_menagers">
+                                <span>Produits ménagers et d'hygiène</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="pharmacie">
+                                <span>Médicaments et produits de pharmacie</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="boulangerie">
+                                <span>Pain frais et viennoiseries du matin</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="cosmetiques">
+                                <span>Produits cosmétiques locaux</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="autre">
+                                <span>Autre (précisez dans le champ suivant)</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group local-only" style="display: none;">
-                        <label>Quels autres services aimeriez-vous voir sur notre plateforme?</label>
-                        <textarea name="services_souhaites" rows="4" placeholder="Services complémentaires que vous aimeriez..."></textarea>
+                        <label>Autres services souhaités (optionnel)</label>
+                        <textarea name="autres_services_detail" rows="2" placeholder="Si vous avez coché 'Autre', précisez ici..."></textarea>
                     </div>
 
                     <div class="form-group local-only" style="display: none;">
