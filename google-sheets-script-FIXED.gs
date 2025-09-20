@@ -1,8 +1,9 @@
 /**
  * Google Apps Script for Leeket Survey - FIXED VERSION
  * Corrects field mappings, formulas, and header labels
+ * Last update: Fixed checkbox array handling
  *
- * SETUP INSTRUCTIONS:
+ * SETUP INSTRUCTIONS (First time):
  * 1. Create a new Google Sheet
  * 2. Go to Extensions > Apps Script
  * 3. Delete any existing code and paste this entire script
@@ -11,6 +12,18 @@
  * 6. Set "Execute as" to "Me"
  * 7. Set "Who has access" to "Anyone"
  * 8. Copy the Web App URL for your form
+ *
+ * UPDATE INSTRUCTIONS (After code changes):
+ * 1. Open your existing Google Sheet
+ * 2. Go to Extensions > Apps Script
+ * 3. Replace all code with this updated version
+ * 4. Save the project (Ctrl+S or Cmd+S)
+ * 5. Click "Deploy" > "Manage deployments"
+ * 6. Click the pencil icon to edit the existing deployment
+ * 7. In "Version", select "New version"
+ * 8. Add description: "Fixed checkbox array handling"
+ * 9. Click "Deploy"
+ * 10. The URL remains the same - no need to update your form
  */
 
 // Configuration
