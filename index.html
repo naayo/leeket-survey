@@ -824,6 +824,37 @@
                 padding: 14px 24px;
                 font-size: 15px;
             }
+
+            .radio-item,
+            .checkbox-item {
+                padding: 12px 14px;
+                font-size: 14px;
+                border-radius: 10px;
+            }
+
+            .radio-item input,
+            .checkbox-item input {
+                width: 18px;
+                height: 18px;
+                margin-right: 10px;
+            }
+
+            .radio-group,
+            .checkbox-group {
+                gap: 10px;
+            }
+
+            /* Boutons de navigation plus petits sur mobile */
+            .form-navigation button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            /* Style du code promo responsive */
+            #promoCodeDisplay {
+                font-size: 18px !important;
+                letter-spacing: 1px !important;
+            }
         }
     </style>
 </head>
@@ -2104,6 +2135,10 @@
                                 <span>Plats préparés de restaurants partenaires</span>
                             </label>
                             <label class="checkbox-item">
+                                <input type="checkbox" name="services_complementaires" value="cosmetiques">
+                                <span>Traiteurs partenaires</span>
+                            </label>
+                            <label class="checkbox-item">
                                 <input type="checkbox" name="services_complementaires" value="produits_menagers">
                                 <span>Produits ménagers et d'hygiène</span>
                             </label>
@@ -2114,10 +2149,6 @@
                             <label class="checkbox-item">
                                 <input type="checkbox" name="services_complementaires" value="boulangerie">
                                 <span>Pain frais et viennoiseries du matin</span>
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" name="services_complementaires" value="cosmetiques">
-                                <span>Produits cosmétiques locaux</span>
                             </label>
                             <label class="checkbox-item">
                                 <input type="checkbox" name="services_complementaires" value="autre">
@@ -2178,7 +2209,7 @@
                 
                 <div style="background: #E8F5E9; border: 2px solid #2ECC71; border-radius: 15px; padding: 20px; margin: 20px 0;">
                     <p style="margin: 0 0 10px 0; color: #1B5E20; font-size: 14px;">Votre code promo exclusif:</p>
-                    <div id="promoCodeDisplay" style="font-size: 28px; font-weight: bold; color: #2ECC71; letter-spacing: 2px; margin: 10px 0;">
+                    <div id="promoCodeDisplay" style="font-size: 20px; font-weight: bold; color: #2ECC71; letter-spacing: 1.5px; margin: 10px 0;">
                         MARCHE******
                     </div>
                     <p style="margin: 10px 0 0 0; color: #388E3C; font-size: 14px;">
