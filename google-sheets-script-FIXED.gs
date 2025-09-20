@@ -107,9 +107,9 @@ function initializeSpreadsheet() {
 		'Beta testeur',
 
 		// Section 10: Final suggestions
-		'Services manquants (Diaspora)', // services_manquants
-		'Difficultés rencontrées (Diaspora)', // difficultes_diaspora
-		'Fonctionnalités innovantes (Diaspora)', // fonctionnalites_innovantes
+		'Besoins courses alimentaires (Diaspora)', // services_manquants
+		'Défis envoi courses/repas (Diaspora)', // difficultes_diaspora
+		'Panier surprise idéal (Diaspora)', // fonctionnalites_innovantes
 		'Recommandation (Diaspora)', // recommandation_diaspora
 		'Suggestions amélioration (Local)', // suggestions_amelioration
 		'Services souhaités (Local)', // services_souhaites
