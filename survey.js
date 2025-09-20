@@ -1033,29 +1033,45 @@ function showClosureScreen(stats = null) {
 
 // Load draft on page load
 window.addEventListener('DOMContentLoaded', async () => {
-	// Check if survey is closed first
-	await checkSurveyStatus();
+	// Setup start button FIRST before checking survey status
+	if (startButton && !startButton.hasAttribute('data-initialized')) {
+		startButton.setAttribute('data-initialized', 'true');
 
-	// Handle start button click
-	if (startButton) {
-		startButton.addEventListener('click', (e) => {
+		startButton.addEventListener('click', function handleStartClick(e) {
 			e.preventDefault();
+			e.stopPropagation();
+
+			console.log('Start button clicked');
 
 			// Hide onboarding, show survey
-			if (onboardingScreen) onboardingScreen.style.display = 'none';
-			if (surveyContainer) surveyContainer.style.display = 'block';
-
-			// Smooth scroll to top
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+			if (onboardingScreen) {
+				onboardingScreen.style.display = 'none';
+			}
+			if (surveyContainer) {
+				surveyContainer.style.display = 'block';
+			}
 
 			// Initialize first section
-			currentSection = 1; // Reset to first section
+			currentSection = 1;
+
+			// Ensure all sections are hidden first
+			sections.forEach(section => section.classList.remove('active'));
+
+			// Show first section
 			showSection(currentSection);
 
 			// Update progress
 			updateProgress();
+
+			// Smooth scroll to top after showing section
+			setTimeout(() => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			}, 100);
 		});
 	}
+
+	// Check if survey is closed
+	await checkSurveyStatus();
 	
 	const draft = localStorage.getItem('marche_survey_draft');
 	if (draft) {
