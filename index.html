@@ -1940,48 +1940,49 @@
                 <div class="section" data-section="10">
                     <h2 class="section-title">
                         <span class="section-number">10</span>
-                        Vos suggestions
+                        <span class="diaspora-only" style="display: none;">Vos besoins depuis l'étranger</span>
+                        <span class="local-only">Vos suggestions</span>
                     </h2>
 
-                    <!-- DIASPORA Section 10: Suggestions spécifiques -->
+                    <!-- DIASPORA Section 10: Besoins spécifiques courses alimentaires -->
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Qu'est-ce qui vous aiderait le plus pour prendre soin de votre famille au Sénégal depuis l'étranger?</label>
-                        <textarea name="services_manquants" rows="4" placeholder="Ex: Pouvoir envoyer des paniers de courses fraîches, payer les factures, organiser des repas de fête, envoyer des cadeaux pour les événements..."></textarea>
+                        <label>Qu'est-ce qui vous aiderait le plus pour soutenir vos proches au Sénégal en matière de courses alimentaires?</label>
+                        <textarea name="services_manquants" rows="4" placeholder="Ex: envoyer un panier hebdomadaire de produits frais, commander un plat sénégalais, offrir un pack surprise..."></textarea>
                     </div>
 
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Quels sont vos principaux défis pour soutenir vos proches au Sénégal? (Plusieurs choix possibles)</label>
+                        <label>Quels sont vos principaux défis pour envoyer des courses ou repas à vos proches? (Plusieurs choix possibles)</label>
                         <div class="checkbox-group">
                             <label class="checkbox-item">
-                                <input type="checkbox" name="difficultes_diaspora" value="confiance_qualite">
-                                <span>Difficile de vérifier la qualité de ce qu'ils reçoivent</span>
+                                <input type="checkbox" name="difficultes_diaspora" value="qualite_fraicheur">
+                                <span>Vérifier la qualité et la fraîcheur des produits</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="difficultes_diaspora" value="processus_complique">
-                                <span>Trop compliqué d'organiser à distance</span>
+                                <input type="checkbox" name="difficultes_diaspora" value="fiabilite_livraison">
+                                <span>S'assurer de la fiabilité de la livraison</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="difficultes_diaspora" value="pas_assez_choix">
-                                <span>Peu d'options fiables pour livrer ce dont ils ont besoin</span>
+                                <input type="checkbox" name="difficultes_diaspora" value="choix_panier">
+                                <span>Choisir le bon panier adapté aux besoins de la famille</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="difficultes_diaspora" value="communication_difficile">
-                                <span>Difficile de savoir ce dont ils ont vraiment besoin</span>
+                                <input type="checkbox" name="difficultes_diaspora" value="cout_total">
+                                <span>Gérer le coût total (produits + livraison)</span>
                             </label>
                             <label class="checkbox-item">
                                 <input type="checkbox" name="difficultes_diaspora" value="delais_longs">
-                                <span>Les envois prennent trop de temps</span>
+                                <span>Les délais de livraison sont trop longs</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" name="difficultes_diaspora" value="aucune">
-                                <span>Aucune difficulté</span>
+                                <input type="checkbox" name="difficultes_diaspora" value="autre">
+                                <span>Autre difficulté (préciser dans le champ suivant)</span>
                             </label>
                         </div>
                     </div>
 
                     <div class="form-group diaspora-only" style="display: none;">
-                        <label>Si vous pouviez envoyer un "panier surprise" à votre famille, qu'y mettriez-vous?</label>
-                        <textarea name="fonctionnalites_innovantes" rows="4" placeholder="Décrivez le panier idéal que vous aimeriez envoyer: produits frais, plats préparés, cadeaux spéciaux..."></textarea>
+                        <label>Si vous pouviez envoyer un "panier surprise" alimentaire à votre famille, qu'y mettriez-vous?</label>
+                        <textarea name="fonctionnalites_innovantes" rows="4" placeholder="Ex: poisson frais, légumes, plats préparés, jus locaux, fruits exotiques..."></textarea>
                     </div>
 
                     <div class="form-group diaspora-only" style="display: none;">
