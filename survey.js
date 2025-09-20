@@ -1038,7 +1038,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 	// Handle start button click
 	if (startButton) {
-		startButton.addEventListener('click', () => {
+		startButton.addEventListener('click', (e) => {
+			e.preventDefault();
+
 			// Hide onboarding, show survey
 			if (onboardingScreen) onboardingScreen.style.display = 'none';
 			if (surveyContainer) surveyContainer.style.display = 'block';
@@ -1047,7 +1049,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 
 			// Initialize first section
-			showSection(1);
+			currentSection = 1; // Reset to first section
+			showSection(currentSection);
+
+			// Update progress
+			updateProgress();
 		});
 	}
 	
@@ -1094,9 +1100,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 		}
 	}
 
+	// Initialize sections visibility (hide all sections initially)
+	sections.forEach(section => section.classList.remove('active'));
+
 	// Initialize progress
 	updateProgress();
-	
+
 	// Set total questions to 9 from the start
 	const totalQSpan = document.getElementById('totalQ');
 	if (totalQSpan) totalQSpan.textContent = '9';
