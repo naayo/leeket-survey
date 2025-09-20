@@ -1,7 +1,7 @@
 /**
  * Google Apps Script for Leeket Survey - FIXED VERSION
  * Corrects field mappings, formulas, and header labels
- * Last update: Fixed checkbox array handling
+ * Last update: Updated fields for new section 10 structure
  *
  * SETUP INSTRUCTIONS (First time):
  * 1. Create a new Google Sheet
@@ -21,7 +21,7 @@
  * 5. Click "Deploy" > "Manage deployments"
  * 6. Click the pencil icon to edit the existing deployment
  * 7. In "Version", select "New version"
- * 8. Add description: "Fixed checkbox array handling"
+ * 8. Add description: "Updated section 10 local fields"
  * 9. Click "Deploy"
  * 10. The URL remains the same - no need to update your form
  */
@@ -124,8 +124,8 @@ function initializeSpreadsheet() {
 		'Défis envoi courses/repas (Diaspora)', // difficultes_diaspora
 		'Panier surprise idéal (Diaspora)', // fonctionnalites_innovantes
 		'Recommandation (Diaspora)', // recommandation_diaspora
-		'Suggestions amélioration (Local)', // suggestions_amelioration
-		'Services souhaités (Local)', // services_souhaites
+		'Services complémentaires souhaités (Local)', // services_complementaires
+		'Autres services détail (Local)', // autres_services_detail
 		'Recommandation (Local)', // recommandation_locale
 
 		// Calculated fields
@@ -556,8 +556,8 @@ function doPost(e) {
 			formatArrayField(data.difficultes_diaspora), // checkbox array
 			data.fonctionnalites_innovantes || '',
 			data.recommandation_diaspora || '',
-			data.suggestions_amelioration || '',
-			data.services_souhaites || '',
+			formatArrayField(data.services_complementaires), // checkbox array
+			data.autres_services_detail || '',
 			data.recommandation_locale || '',
 
 			// Calculated fields
