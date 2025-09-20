@@ -1116,8 +1116,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 		}
 	}
 
-	// Initialize sections visibility (hide all sections initially)
-	sections.forEach(section => section.classList.remove('active'));
+	// Initialize sections visibility (hide all sections initially, only if onboarding is still visible)
+	const onboardingScreen = document.getElementById('onboardingScreen');
+	const surveyContainer = document.querySelector('.survey-container');
+	if (onboardingScreen && onboardingScreen.style.display !== 'none') {
+		sections.forEach(section => section.classList.remove('active'));
+	}
 
 	// Initialize progress
 	updateProgress();
