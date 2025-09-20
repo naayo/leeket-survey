@@ -402,6 +402,25 @@ function getSegment(score) {
 }
 
 /**
+ * Format array fields to string
+ * Handles checkbox arrays and converts them to comma-separated strings
+ */
+function formatArrayField(value) {
+	if (!value) return '';
+
+	// If it's already a string, return it
+	if (typeof value === 'string') return value;
+
+	// If it's an array, join with commas
+	if (Array.isArray(value)) {
+		return value.join(', ');
+	}
+
+	// For any other type, convert to string
+	return String(value);
+}
+
+/**
  * Handle POST request from the form - FIXED field mappings
  */
 function doPost(e) {
@@ -472,25 +491,25 @@ function doPost(e) {
 			data.profession || '',
 
 			// Section 2: Habitudes (N/A for diaspora)
-			data.lieu_courses || '',
+			formatArrayField(data.lieu_courses), // checkbox array
 			data.frequence || data.frequence_courses || '',
 			data.budget_hebdo || '',
-			data.defis || '',
+			formatArrayField(data.defis), // checkbox array
 
 			// Section 3: Cuisine (N/A for diaspora)
-			data.plats || '',
+			formatArrayField(data.plats), // checkbox array
 			data.freq_cuisine || '',
 			data.qui_cuisine || '',
 
 			// Section 4: Commande (N/A for diaspora)
 			data.delai_commande || '',
 			data.commande_auto || '',
-			data.avantages_anticipe || '',
+			formatArrayField(data.avantages_anticipe), // checkbox array
 			data.delai_ideal || '',
 
 			// Section 5: Concept (N/A for diaspora)
 			data.interet || data.score_interet || '',
-			data.attrait || '',
+			formatArrayField(data.attrait), // checkbox array
 			data.service_prefere || '',
 
 			// Section 6: Prix (N/A for diaspora)
@@ -502,12 +521,12 @@ function doPost(e) {
 
 			// Section 7: Experience (N/A for diaspora)
 			data.suggestions || '',
-			data.inquietudes || '',
+			formatArrayField(data.inquietudes), // checkbox array
 
 			// Section 8: Diaspora specific
-			data.zones_famille || '', // zones famille au Sénégal
-			data.fonctionnalites_essentielles || '',
-			data.types_produits || '',
+			formatArrayField(data.zones_famille), // zones famille au Sénégal
+			formatArrayField(data.fonctionnalites_essentielles), // checkbox array
+			formatArrayField(data.types_produits), // checkbox array
 			data.preference_commande || '',
 			data.frais_service_diaspora || '',
 			data.freq_utilisation_diaspora || '',
@@ -521,7 +540,7 @@ function doPost(e) {
 
 			// Section 10: Final suggestions
 			data.services_manquants || '',
-			data.difficultes_diaspora || '',
+			formatArrayField(data.difficultes_diaspora), // checkbox array
 			data.fonctionnalites_innovantes || '',
 			data.recommandation_diaspora || '',
 			data.suggestions_amelioration || '',
