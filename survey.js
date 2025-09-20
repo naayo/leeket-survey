@@ -13,6 +13,11 @@ const errorMessage = document.getElementById('errorMessage');
 const loading = document.getElementById('loading');
 const loadingOverlay = document.getElementById('loadingOverlay');
 
+// Onboarding elements
+const onboardingScreen = document.getElementById('onboardingScreen');
+const surveyContainer = document.getElementById('surveyContainer');
+const startButton = document.getElementById('startSurvey');
+
 let currentSection = 1;
 let totalSections = 10; // Now 10 sections total
 let isDiaspora = false;
@@ -1030,6 +1035,21 @@ function showClosureScreen(stats = null) {
 window.addEventListener('DOMContentLoaded', async () => {
 	// Check if survey is closed first
 	await checkSurveyStatus();
+
+	// Handle start button click
+	if (startButton) {
+		startButton.addEventListener('click', () => {
+			// Hide onboarding, show survey
+			if (onboardingScreen) onboardingScreen.style.display = 'none';
+			if (surveyContainer) surveyContainer.style.display = 'block';
+
+			// Smooth scroll to top
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+
+			// Initialize first section
+			showSection(1);
+		});
+	}
 	
 	const draft = localStorage.getItem('marche_survey_draft');
 	if (draft) {
